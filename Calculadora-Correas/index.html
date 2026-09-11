@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q-Vigil | Tensión de Correas</title>
+  <link rel="icon" type="image/png" href="logo_qvigil.png">
+  <!-- Tailwind CSS para diseño moderno y responsive -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+
+    /* ================= RESPONSIVE MÓVIL ================= */
+    @media (max-width: 640px) {
+      body {
+        padding: 0.75rem !important;
+      }
+
+      .max-w-6xl {
+        width: 100%;
+      }
+
+      header {
+        padding: 1rem !important;
+        border-radius: 1rem !important;
+        gap: 0.85rem !important;
+        align-items: flex-start !important;
+      }
+
+      header > div:first-child {
+        width: 100%;
+        gap: 0.75rem !important;
+        align-items: center;
+      }
+
+      header > div:last-child {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem !important;
+      }
+
+      header > div:last-child button {
+        width: 100%;
+        min-height: 2.5rem;
+        padding: 0.55rem 0.5rem !important;
+        font-size: 0.72rem !important;
+      }
+
+      header h1 {
+        font-size: 1.18rem !important;
+        line-height: 1.2 !important;
+      }
+
+      header p {
+        font-size: 0.68rem !important;
+        line-height: 1.35 !important;
+        margin-top: 0.2rem;
+      }
+
+      /* La polea siempre conserva proporción cuadrada */
+      header > div:first-child > div:first-child {
+        width: 3.5rem !important;
+        height: 3.5rem !important;
+        min-width: 3.5rem !important;
+        min-height: 3.5rem !important;
+        aspect-ratio: 1 / 1;
+        flex: 0 0 3.5rem !important;
+        padding: 0.3rem !important;
+      }
+
+      header > div:first-child > div:first-child img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+        display: block;
+      }
+
+      .grid.grid-cols-1.lg\:grid-cols-12 {
+        gap: 0.85rem !important;
+      }
+
+      .bg-white.border.border-slate-200.rounded-2xl.p-5 {
+        padding: 1rem !important;
+        border-radius: 1rem !important;
+      }
+
+      /* Encabezados de sección: evitar que se aprieten o desborden */
+      .bg-white.border.border-slate-200.rounded-2xl.p-5 > .flex.items-center.justify-between {
+        gap: 0.5rem;
+        align-items: flex-start;
+      }
+
+      .bg-white.border.border-slate-200.rounded-2xl.p-5 > .flex.items-center.justify-between > span {
+        text-align: right;
+        flex-shrink: 0;
+      }
+
+      /* Campos: una columna en móvil para que las unidades no choquen */
+      .grid.grid-cols-1.sm\:grid-cols-2 {
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem !important;
+      }
+
+      input, select {
+        min-height: 2.75rem;
+        font-size: 0.9rem !important;
+      }
+
+      /* Esquema 2D con proporción estable */
+      .w-full.h-40 {
+        height: auto !important;
+        aspect-ratio: 16 / 7;
+        min-height: 8.5rem;
+      }
+
+      /* Tarjetas secundarias: mantenerlas en dos columnas, pero compactas */
+      .grid.grid-cols-2.gap-3 {
+        gap: 0.55rem !important;
+      }
+
+      .grid.grid-cols-2.gap-3 > div {
+        padding: 0.8rem !important;
+        min-width: 0;
+      }
+
+      .grid.grid-cols-2.gap-3 .text-\[11px\] {
+        font-size: 0.58rem !important;
+        line-height: 1.25 !important;
+      }
+
+      /* Métricas inferiores: conservar 3 columnas sin deformar */
+      .grid.grid-cols-3 {
+        gap: 0.35rem !important;
+      }
+
+      .grid.grid-cols-3 > div {
+        min-width: 0;
+        padding: 0.15rem;
+      }
+
+      .grid.grid-cols-3 span {
+        overflow-wrap: anywhere;
+      }
+
+      /* Tarjeta principal de resultados */
+      #resultsContainer > div:first-child {
+        padding: 1rem !important;
+      }
+
+      #resultsContainer .text-3xl {
+        font-size: 1.8rem !important;
+      }
+
+      #resultsContainer .text-2xl {
+        font-size: 1.35rem !important;
+      }
+
+      footer {
+        flex-direction: column !important;
+        text-align: center;
+        padding-bottom: 0.5rem;
+      }
+
+      /* Modal cómodo en pantallas pequeñas */
+      #modalJ > div {
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+        padding: 1rem !important;
+        border-radius: 1rem !important;
+      }
+    }
+
+    @media print {
+      body { background: white !important; padding: 0 !important; color: black !important; }
+      .no-print { display: none !important; }
+      .print-only { display: block !important; }
+      .shadow-sm, .shadow-md, .shadow-lg { box-shadow: none !important; }
+    }
+  
+
+  /* Cuadro de error */
+  .error-box {
+    width: 100%;
+    box-sizing: border-box;
+    background: linear-gradient(
+    90deg,
+    #7A141A 0%,
+    #B31B25 25%,
+    #D96A72 50%,
+    #B31B25 75%,
+    #7A141A 100%
+  );
+    border: none !important;
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: #FFFFFF !important;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+</style>
+
+<style>
+.aviso-importante {
+  width: 100%;
+  box-sizing: border-box;
+  background: linear-gradient(
+  90deg,
+  #7E775E 0%,
+  #999077 25%,
+  #D0C6AA 50%,
+  #999077 75%,
+  #7E775E 100%
+);
+  border: none;
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: #FFFFFF;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.aviso-texto strong {
+  font-weight: 800;
+  margin-right: 4px;
+}
+@media (max-width: 640px) {
+  .aviso-importante {
+    font-size: 11px;
+    padding: 12px 13px;
+  }
+}
+
+/* Ajuste responsive Q-Vigil */
+@media (max-width: 1023px) {
+  .qv-layout { grid-template-columns: minmax(0, 1fr) !important; }
+}
+
+@media (max-width: 640px) {
+  body { padding: 10px !important; }
+  .qv-layout { gap: 16px !important; }
+  .qv-form, .qv-results { width: 100%; min-width: 0; }
+  .qv-results .grid.grid-cols-2 { grid-template-columns: 1fr !important; }
+  .qv-results .grid.grid-cols-3 { grid-template-columns: 1fr !important; }
+  .qv-results .grid.grid-cols-3 > div { border-left: 0 !important; border-right: 0 !important; padding: 8px 0; }
+  header { padding: 16px !important; }
+  header h1 { font-size: 1.35rem !important; line-height: 1.2; }
+  header > div:last-child { width: 100%; }
+  header > div:last-child button { flex: 1; }
+}
+</style>
+
+<style id="protocolo-print-style">
+@media print {
+  @page { size: A4 portrait; margin: 12mm 13mm 14mm 13mm; }
+
+  html, body {
+    background:#fff !important;
+    color:#000 !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    padding:0 !important;
+    margin:0 !important;
+    font-size:10pt !important;
+    line-height:1.25 !important;
+  }
+
+  /* Ocultar controles de la aplicación */
+  .no-print,
+  button,
+  #errorBox,
+  #modalJ,
+  .zero-hint { display:none !important; }
+
+  .max-w-6xl {
+    max-width:none !important;
+    width:100% !important;
+    margin:0 !important;
+  }
+
+  /* ================= ENCABEZADO DEL PROTOCOLO ================= */
+  header {
+    background:#fff !important;
+    color:#000 !important;
+    box-shadow:none !important;
+    border:0 !important;
+    border-radius:0 !important;
+    padding:0 0 5mm !important;
+    margin:0 0 5mm !important;
+    display:block !important;
+    text-align:center !important;
+    border-bottom:1px solid #000 !important;
+  }
+
+  header > div:first-child {
+    display:block !important;
+    width:100% !important;
+  }
+
+  header > div:first-child > div:first-child { display:none !important; }
+
+  header h1 {
+    font-family:Arial, Helvetica, sans-serif !important;
+    font-size:20pt !important;
+    line-height:1.15 !important;
+    font-weight:700 !important;
+    color:#000 !important;
+    margin:0 !important;
+  }
+
+  header h1 { font-size:0 !important; }
+  header h1::after {
+    content:"Protocolo de Sistema de Transmisión";
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:20pt;
+    line-height:1.15;
+    font-weight:700;
+    color:#000;
+  }
+
+  header p {
+    font-family:Arial, Helvetica, sans-serif !important;
+    font-size:14pt !important;
+    line-height:1.2 !important;
+    color:#000 !important;
+    margin:2.5mm 0 0 !important;
+  }
+
+  /* ================= ORDEN A4 ================= */
+  .qv-layout {
+    display:flex !important;
+    flex-direction:column !important;
+    gap:0 !important;
+  }
+
+  .qv-form,
+  .qv-results {
+    display:contents !important;
+  }
+
+  .qv-form > div,
+  .qv-results > div,
+  #resultsContainer > div,
+  footer {
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+  }
+
+  /* Orden: geometría → esquema → parámetros → resultados → aviso */
+  .qv-form > div:nth-child(1) { order:10; }
+  .qv-results > div:nth-child(1) { order:20; }
+  .qv-form > div:nth-child(2) { order:30; }
+  .qv-form > div:nth-child(3) { order:40; }
+  .qv-results > div:nth-child(3) { order:50; }
+  footer { order:60; }
+
+  /* Botón Mostrar resultados nunca se imprime */
+  .qv-form > button { display:none !important; }
+
+  /* ================= SECCIONES ================= */
+  .qv-form > div,
+  .qv-results > div,
+  #resultsContainer > div {
+    width:100% !important;
+    box-sizing:border-box !important;
+  }
+
+  .qv-form > div,
+  .qv-results > div:first-child {
+    background:#fff !important;
+    border:1px solid #000 !important;
+    border-radius:8px !important;
+    box-shadow:none !important;
+    padding:4mm !important;
+    margin:0 0 4mm !important;
+  }
+
+  /* ================= GEOMETRÍA ================= */
+  .qv-form > div:nth-child(1) {
+    margin-bottom:3mm !important;
+  }
+
+  /* La geometría conserva sus dos valores en formato compacto */
+  .qv-form > div:nth-child(1) .grid {
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:4mm !important;
+  }
+
+  /* ================= ESQUEMA 2D ================= */
+  .qv-results > div:first-child {
+    padding:3.5mm !important;
+    margin-bottom:4mm !important;
+  }
+
+  .qv-results > div:first-child > div:first-child {
+    margin-bottom:2mm !important;
+  }
+
+  .qv-results > div:first-child .w-full.h-40 {
+    height:58mm !important;
+    min-height:0 !important;
+    aspect-ratio:auto !important;
+    background:#fff !important;
+    border:1px solid #000 !important;
+    border-radius:5px !important;
+    padding:2mm !important;
+  }
+
+  #beltSvg {
+    width:100% !important;
+    height:100% !important;
+  }
+
+  .qv-results > div:first-child .grid.grid-cols-2 {
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:3mm !important;
+    margin-top:3mm !important;
+  }
+
+  .qv-results > div:first-child .grid.grid-cols-2 > div {
+    background:#fff !important;
+    border:1px solid #000 !important;
+    border-radius:5px !important;
+    padding:2.5mm !important;
+  }
+
+  /* ================= FORMULARIO COMO FICHA TÉCNICA ================= */
+  input,
+  select {
+    appearance:none !important;
+    -webkit-appearance:none !important;
+    background:#fff !important;
+    color:#000 !important;
+    border:1px solid #000 !important;
+    border-radius:5px !important;
+    box-shadow:none !important;
+    min-height:0 !important;
+    height:auto !important;
+    padding:2.2mm 12mm 2.2mm 3mm !important;
+    font-family:Arial, Helvetica, sans-serif !important;
+    font-size:10pt !important;
+    font-weight:700 !important;
+  }
+
+  .qv-form .relative.flex.items-center > span:last-child {
+    color:#000 !important;
+  }
+
+  .qv-form .bg-slate-50 {
+    background:#fff !important;
+  }
+
+  .qv-form .border-slate-200\/80 {
+    border-color:#000 !important;
+    background:#fff !important;
+  }
+
+  /* ================= RESULTADOS ================= */
+  #resultsContainer {
+    display:block !important;
+    width:100% !important;
+    margin:0 !important;
+  }
+
+  #resultsContainer > div:first-child {
+    background:#fff !important;
+    color:#000 !important;
+    border:1px solid #000 !important;
+    border-radius:8px !important;
+    box-shadow:none !important;
+    padding:4mm !important;
+    margin:0 0 4mm !important;
+    position:relative !important;
+  }
+
+  #resultsContainer > div:first-child > .absolute { display:none !important; }
+
+  #resultsContainer > div:first-child .bg-emerald-400\/30 {
+    background:#fff !important;
+    border:1px solid #000 !important;
+    color:#000 !important;
+  }
+
+  #resultsContainer > div:first-child .grid {
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:6mm !important;
+  }
+
+  #resultsContainer > div:first-child .border-l {
+    border-left:1px solid #000 !important;
+  }
+
+  #resultsContainer > div:nth-child(2) {
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:4mm !important;
+    margin:0 0 4mm !important;
+  }
+
+  #resultsContainer > div:nth-child(2) > div,
+  #resultsContainer > div:nth-child(3) {
+    background:#fff !important;
+    border:1px solid #000 !important;
+    border-radius:8px !important;
+    box-shadow:none !important;
+  }
+
+  #resultsContainer > div:nth-child(3) {
+    padding:4mm !important;
+    margin:0 0 4mm !important;
+  }
+
+  #resultsContainer .text-emerald-200,
+  #resultsContainer .text-emerald-100,
+  #resultsContainer .text-blue-900,
+  #resultsContainer .text-blue-950,
+  #resultsContainer .text-slate-500,
+  #resultsContainer .text-slate-600,
+  #resultsContainer .text-slate-800,
+  #resultsContainer .text-slate-900 {
+    color:#000 !important;
+  }
+
+  #resultsContainer > div:first-child .text-3xl,
+  #resultsContainer > div:first-child .text-4xl {
+    font-size:22pt !important;
+  }
+
+  #resultsContainer > div:first-child .text-2xl,
+  #resultsContainer > div:first-child .text-3xl {
+    font-size:18pt !important;
+  }
+
+  /* Aviso técnico sobrio */
+  .aviso-importante {
+    background:#fff !important;
+    border:1px solid #000 !important;
+    border-radius:8px !important;
+    color:#000 !important;
+    padding:3.5mm 4mm !important;
+    font-family:Arial, Helvetica, sans-serif !important;
+    font-size:9pt !important;
+    line-height:1.35 !important;
+    margin:0 0 4mm !important;
+  }
+
+  .aviso-texto,
+  .aviso-texto strong { color:#000 !important; }
+
+  /* ================= TIPOGRAFÍA GENERAL ================= */
+  h2, h3, span, label, p, div, strong, select, input {
+    font-family:Arial, Helvetica, sans-serif !important;
+    color:#000 !important;
+  }
+
+  h2 {
+    font-size:12pt !important;
+    font-weight:700 !important;
+  }
+
+  label {
+    font-size:9pt !important;
+    font-weight:700 !important;
+  }
+
+  /* Evitar colores decorativos en impresión */
+  .bg-gradient-to-br,
+  .bg-gradient-to-b,
+  .bg-blue-50,
+  .bg-slate-50,
+  .bg-slate-100,
+  .bg-emerald-600,
+  .bg-teal-800 {
+    background:#fff !important;
+  }
+
+  .border-slate-100,
+  .border-slate-200,
+  .border-slate-300,
+  .border-emerald-500\/40,
+  .border-emerald-300\/40 {
+    border-color:#000 !important;
+  }
+
+  /* SVG en blanco y negro, sin perder la geometría */
+  #beltSvg line,
+  #beltSvg path,
+  #beltSvg circle,
+  #beltSvg text {
+    stroke:#000 !important;
+  }
+  #beltSvg text { fill:#000 !important; }
+  #beltSvg circle { fill:#fff !important; }
+
+  /* ================= PIE ================= */
+  footer {
+    border-top:1px solid #000 !important;
+    color:#000 !important;
+    background:#fff !important;
+    box-shadow:none !important;
+    padding:3mm 0 0 !important;
+    margin-top:2mm !important;
+    font-size:8pt !important;
+    line-height:1.2 !important;
+    display:flex !important;
+    justify-content:space-between !important;
+    gap:5mm !important;
+  }
+
+  /* Mantener juntas las tarjetas y secciones críticas */
+  .qv-form > div:nth-child(1),
+  .qv-results > div:first-child,
+  .qv-form > div:nth-child(2),
+  .qv-form > div:nth-child(3),
+  #resultsContainer > div:first-child,
+  #resultsContainer > div:nth-child(2),
+  #resultsContainer > div:nth-child(3),
+  .aviso-importante {
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+  }
+}
+
+/* =========================================
+   PANTALLA DE CARGA Q-VIGIL
+   ========================================= */
+#pantalla_carga{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  background:#FFFFFF;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+  opacity:1;
+  visibility:visible;
+  transition:opacity .45s ease,visibility .45s ease;
+  padding:0;
+  margin:0;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+.carga-contenido{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  margin:0;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+.imagen-carga{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center;
+  display:block;
+  margin:0;
+}
+.cargando{
+  display:none !important;
+}
+#pantalla_carga.ocultar{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+
+</style>
+
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased p-3 sm:p-6 font-sans">
+  <!-- =========================================
+       PANTALLA DE CARGA Q-VIGIL
+       ========================================= -->
+  <div id="pantalla_carga" aria-label="Cargando Q-Vigil">
+    <div class="carga-contenido">
+      <img src="pantalla_carga.png" alt="Q-Vigil" class="imagen-carga">
+    </div>
+  </div>
+
+
+<div class="max-w-6xl mx-auto space-y-6">
+
+  <!-- ================= HEADER ================= -->
+  <header class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 rounded-2xl p-5 text-white shadow-lg flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center border border-white/20 shadow-inner overflow-hidden p-1">
+        <img
+          src="data:image/png;base64,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"
+          alt="Polea"
+          class="w-full h-full object-contain block"
+          style="background:#FFFFFF;"
+        >
+      </div>
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Calculadora de Tensión de Correas</h1>
+        <p class="text-blue-200 text-xs sm:text-sm">Inspección y Verificación de Tensión de Correas</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2 no-print">
+      <button onclick="cargarEjemplo()" class="px-3 py-2 text-xs font-semibold bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg transition text-white">
+        Cargar Ejemplo
+      </button>
+      <button onclick="window.print()" class="px-3 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition flex items-center justify-center gap-1.5 shadow-sm text-center">
+        Imprimir Ficha
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= LAYOUT EN 2 COLUMNAS ================= -->
+  <div class="qv-layout grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- COLUMNA IZQUIERDA: FORMULARIO (7 COLS) -->
+    <div class="qv-form lg:col-span-7 space-y-5">
+
+      <!-- SECCIÓN 1: POLEAS Y GEOMETRÍA -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h2 class="text-[16px] font-bold text-black flex items-center gap-2.5" style="font-family: Arial, sans-serif;">
+            <span class="w-7 h-7 rounded-lg bg-[#EBF1FF] text-black text-[16px] font-bold flex items-center justify-center flex-shrink-0">1</span>
+            Geometría de Poleas
+          </h2>
+          <span class="text-xs text-slate-400 font-medium">Dimensiones en milímetros</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Polea Motriz (d)</label>
+            <div class="relative flex items-center">
+              <input id="d" type="number" step="any" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition pr-12">
+              <span class="absolute right-3 text-xs font-bold text-slate-400">mm</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Polea Conducida (D)</label>
+            <div class="relative flex items-center">
+              <input id="D" type="number" step="any" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition pr-12">
+              <span class="absolute right-3 text-xs font-bold text-slate-400">mm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 2: MOTOR Y POTENCIA -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h2 class="text-[16px] font-bold text-black flex items-center gap-2.5" style="font-family: Arial, sans-serif;">
+            <span class="w-7 h-7 rounded-lg bg-[#EBF1FF] text-black text-[16px] font-bold flex items-center justify-center flex-shrink-0">2</span>
+            Parámetros del Motor
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Potencia Motor (P)</label>
+            <div class="relative flex items-center">
+              <input id="P" type="number" step="any" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition pr-12">
+              <span class="absolute right-3 text-xs font-bold text-slate-400">kW</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Velocidad Motor (RPM)</label>
+            <div class="relative flex items-center">
+              <input id="rpm" type="number" step="any" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition pr-14">
+              <span class="absolute right-3 text-xs font-bold text-slate-400">RPM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 3: CORREAS Y FACTORES -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h2 class="text-[16px] font-bold text-black flex items-center gap-2.5" style="font-family: Arial, sans-serif;">
+            <span class="w-7 h-7 rounded-lg bg-[#EBF1FF] text-black text-[16px] font-bold flex items-center justify-center flex-shrink-0">3</span>
+            Perfil de Correa y Factores
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Perfil de Correa</label>
+            <select id="perfil" onchange="cambiarPerfil()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition">
+              <option value="" selected disabled>Seleccione Correa</option>
+              <optgroup label="Métricas (mm)">
+                <option value="SPZ">SPZ (0.090 kg/m)</option>
+                <option value="SPA">SPA (0.130 kg/m)</option>
+                <option value="SPB">SPB (0.195 kg/m)</option>
+                <option value="SPC">SPC (0.350 kg/m)</option>
+              </optgroup>
+              <optgroup label="Pulgadas (RMA)">
+                <option value="3V">3V (0.080 kg/m)</option>
+                <option value="5V">5V (0.220 kg/m)</option>
+                <option value="8V">8V (0.500 kg/m)</option>
+                <option value="5VX_OPTIBELT">5VX - Optibelt (0.183 kg/m)</option>
+                <option value="5VX_GATES">5VX - Gates (0.140 kg/m)</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label id="labelLongitud" class="text-xs font-bold text-slate-700">Longitud (L)</label>
+              <span id="longitudUnitHelp" class="text-xs text-slate-400 font-medium">Métrica (mm)</span>
+            </div>
+            <div class="relative flex items-center">
+              <input id="L" type="number" step="any" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition pr-12">
+              <span id="longitudUnitBadge" class="absolute right-3 text-xs font-bold text-slate-400">mm</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Cantidad de Correas (Z)</label>
+            <div class="relative flex items-center">
+              <input id="Z" type="number" min="1" step="1" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition pr-14">
+              <span class="absolute right-3 text-xs font-bold text-slate-400">unid.</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-xs font-bold text-slate-700">Factor de Servicio (J)</label>
+              <button type="button" onclick="mostrarModalJ()" class="text-xs text-slate-400 hover:text-slate-500 font-medium underline">
+                ¿Qué factor usar?
+              </button>
+            </div>
+            <div class="relative flex items-center">
+              <input id="J" type="number" step="0.01" min="0.5" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition">
+            </div>
+          </div>
+        </div>
+
+        <!-- DATOS FÍSICOS CONSTANTES -->
+        <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 grid grid-cols-2 gap-3 text-xs">
+          <div>
+            <span class="text-slate-500 block">Masa lineal (m):</span>
+            <span id="mDisplay" class="font-bold text-blue-900 text-sm">0.195 kg/m</span>
+          </div>
+          <div>
+            <span class="text-slate-500 block">Factor de contacto (K):</span>
+            <span id="kDisplay" class="font-bold text-blue-900 text-sm">0.960 (Dinámico)</span>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" onclick="mostrarResultados()" class="w-full py-3 px-4 bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 hover:from-blue-800 hover:via-blue-700 hover:to-indigo-800 text-white font-extrabold rounded-xl shadow-md hover:shadow-lg hover:shadow-blue-950/25 active:scale-[0.99] transition">
+        Mostrar resultados
+      </button>
+
+    </div>
+
+    <!-- COLUMNA DERECHA: DASHBOARD DE RESULTADOS (5 COLS) -->
+    <div class="qv-results lg:col-span-5 space-y-5">
+
+      <!-- ESQUEMA 2D DE TRANSMISIÓN (SVG) -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Esquema 2D de Transmisión</span>
+          <span id="ratioDisplay" class="text-xs font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded">i = 0</span>
+        </div>
+        
+        <div class="w-full h-40 bg-gradient-to-b from-slate-900 to-slate-950 rounded-xl flex items-center justify-center p-2 relative overflow-hidden border border-slate-800">
+          <svg id="beltSvg" viewBox="0 0 360 140" class="w-full h-full">
+            <!-- Renderizado dinámico en JS -->
+          </svg>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mt-3 text-center text-xs">
+          <div class="bg-slate-50 p-2 rounded-lg border border-slate-200">
+            <span class="text-slate-400 block text-[10px]">DISTANCIA CENTROS (C)</span>
+            <span id="cValue" class="font-extrabold text-slate-800 text-sm">0 mm</span>
+          </div>
+          <div class="bg-slate-50 p-2 rounded-lg border border-slate-200">
+            <span class="text-slate-400 block text-[10px]">TRAMO LIBRE (l)</span>
+            <span id="tramoValue" class="font-extrabold text-slate-800 text-sm">0 mm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALERTA DE ERROR -->
+      <div id="errorBox" class="hidden error-box font-bold">
+        <span id="errorMsg">Parámetros inválidos</span>
+      </div>
+
+      <!-- CONTENEDOR DE RESULTADOS PRINCIPALES -->
+      <div id="resultsContainer" class="space-y-4">
+
+        <!-- TARJETA DESTACADA: CORREA NUEVA (+10% RECOMENDADA) -->
+        <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-md relative overflow-hidden">
+          <div class="absolute -right-4 -bottom-4 text-white/10 text-8xl font-black select-none pointer-events-none">Hz</div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="bg-emerald-400/30 border border-emerald-300/40 text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full text-emerald-100">
+              Correa Nueva (Instalación +10%)
+            </span>
+            <span class="text-xs text-emerald-200 font-medium">Recomendado</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 items-end mt-3">
+            <div>
+              <span class="text-emerald-200 text-xs block font-semibold">FRECUENCIA OBJETIVO</span>
+              <div class="flex items-baseline gap-1">
+                <span id="fNew10Val" class="text-3xl sm:text-4xl font-black tracking-tight">0.0</span>
+                <span class="text-lg font-bold text-emerald-200">Hz</span>
+              </div>
+            </div>
+            <div class="text-right border-l border-emerald-500/40 pl-3">
+              <span class="text-emerald-200 text-xs block font-semibold">TENSIÓN POR RAMAL</span>
+              <div class="flex items-baseline justify-end gap-1">
+                <span id="tNew10Val" class="text-2xl sm:text-3xl font-bold">0</span>
+                <span class="text-sm font-semibold text-emerald-200">N</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-emerald-500/40 flex items-center justify-between text-[11px] text-emerald-100">
+            <span>Rango de medición sugerido:</span>
+            <span id="rangoNew10" class="font-bold bg-emerald-950/40 px-2 py-0.5 rounded">0.0 - 0.0 Hz</span>
+          </div>
+        </div>
+
+        <!-- TARJETAS SECUNDARIAS (NUEVA NOMINAL & RE-TENSADO USADA) -->
+        <div class="grid grid-cols-2 gap-3">
+          
+             <div class="bg-white border border-slate-200 rounded-xl p-3.5 shadow-sm">
+            <div class="text-[11px] font-bold text-blue-900 uppercase">Correa Nueva (Nominal)</div>
+            <div class="mt-1.5 flex items-baseline gap-1">
+              <span id="fNewVal" class="text-2xl font-black text-blue-900">0.0</span>
+              <span class="text-xs font-bold text-blue-900">Hz</span>
+            </div>
+            <div class="text-xs text-blue-900 mt-0.5">
+              Tensión: <strong id="tNewVal" class="text-blue-900">0 N</strong>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 shadow-sm">
+            <div class="text-[11px] font-bold text-blue-900 uppercase">Re-tensado (Usada)</div>
+            <div class="mt-1.5 flex items-baseline gap-1">
+              <span id="fUsedVal" class="text-2xl font-black text-blue-900">0.0</span>
+              <span class="text-xs font-bold text-blue-900">Hz</span>
+            </div>
+            <div class="text-xs text-blue-900 mt-0.5">
+              Tensión: <strong id="tUsedVal" class="text-blue-900">0 N</strong>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- MÉTRICAS CINEMÁTICAS Y DINÁMICAS ADICIONALES -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm grid grid-cols-3 gap-2 text-center text-xs">
+          <div>
+            <span class="text-slate-400 block text-[10px]">VELOCIDAD (v)</span>
+            <span id="vVal" class="font-bold text-slate-800 text-sm">0.00 m/s</span>
+          </div>
+          <div class="border-x border-slate-100">
+            <span class="text-slate-400 block text-[10px]">POTENCIA / CORREA</span>
+            <span id="pPerBeltVal" class="font-bold text-slate-800 text-sm">0.00 kW</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[10px]">FUERZA EFECTIVA</span>
+            <span id="fuVal" class="font-bold text-slate-800 text-sm">0 N</span>
+          </div>
+        </div>
+
+        <!-- AVISO IMPORTANTE -->
+        <div class="aviso-importante">
+          <div class="aviso-texto">
+            <strong>Importante:</strong> Los valores calculados son una referencia técnica. Verifica siempre las especificaciones del fabricante, el tipo de correa y las condiciones reales de operación antes de realizar el ajuste en terreno.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="text-center text-xs text-slate-400 pt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+    <span>© 2026 Q-Vigil • División de Ingeniería y Mantenimiento Predictivo</span>
+    <span>Fórmulas validadas bajo estándares ISO / DIN / RMA</span>
+  </footer>
+
+</div>
+
+<!-- ================= MODAL ASISTENTE FACTOR DE SERVICIO J ================= -->
+<div id="modalJ" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+      <h3 class="font-extrabold text-slate-900 text-base">Asistente de Factor de Servicio (J)</h3>
+      <button onclick="cerrarModalJ()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+    </div>
+    
+    <p class="text-xs text-slate-600 leading-relaxed">
+      Selecciona la aplicación de tu equipo para asignar automáticamente el factor de sobrecarga recomendado según catálogos industriales:
+    </p>
+
+    <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
+      <button onclick="seleccionarJ(1.10)" class="w-full text-left p-2.5 rounded-xl hover:bg-blue-50 border border-slate-200 transition flex justify-between items-center text-xs">
+        <div>
+          <strong class="text-slate-800 block">Carga Ligera (J = 1.10)</strong>
+          <span class="text-slate-500 text-[11px]">Ventiladores axiales pequeños, bombas centrífugas ligeras</span>
+        </div>
+        <span class="font-extrabold text-blue-700 bg-blue-100 px-2 py-1 rounded">1.10</span>
+      </button>
+
+      <button onclick="seleccionarJ(1.20)" class="w-full text-left p-2.5 rounded-xl hover:bg-blue-50 border border-blue-200 bg-blue-50/50 transition flex justify-between items-center text-xs">
+        <div>
+          <strong class="text-slate-800 block">Carga Normal (J = 1.20 - Estándar)</strong>
+          <span class="text-slate-500 text-[11px]">Compresores rotativos, sopladores, transportadores de banda</span>
+        </div>
+        <span class="font-extrabold text-blue-700 bg-blue-100 px-2 py-1 rounded">1.20</span>
+      </button>
+
+      <button onclick="seleccionarJ(1.40)" class="w-full text-left p-2.5 rounded-xl hover:bg-blue-50 border border-slate-200 transition flex justify-between items-center text-xs">
+        <div>
+          <strong class="text-slate-800 block">Carga Pesada (J = 1.40)</strong>
+          <span class="text-slate-500 text-[11px]">Bombas de pistón, compresores alternativos, elevadores de cangilones</span>
+        </div>
+        <span class="font-extrabold text-blue-700 bg-blue-100 px-2 py-1 rounded">1.40</span>
+      </button>
+
+      <button onclick="seleccionarJ(1.60)" class="w-full text-left p-2.5 rounded-xl hover:bg-blue-50 border border-slate-200 transition flex justify-between items-center text-xs">
+        <div>
+          <strong class="text-slate-800 block">Carga con Impacto Severo (J = 1.60 - 1.80)</strong>
+          <span class="text-slate-500 text-[11px]">Chancadores de mandíbula, molinos de bolas, trituradoras</span>
+        </div>
+        <span class="font-extrabold text-blue-700 bg-blue-100 px-2 py-1 rounded">1.60</span>
+      </button>
+    </div>
+
+    <div class="text-right pt-2 border-t border-slate-100">
+      <button onclick="cerrarModalJ()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= JAVASCRIPT / LÓGICA DE CÁLCULO ================= -->
+<script>
+const datosCorrea = {
+  SPZ: { masa: 0.090 },
+  SPA: { masa: 0.130 },
+  SPB: { masa: 0.195 },
+  SPC: { masa: 0.350 },
+  "3V": { masa: 0.080 },
+  "5V": { masa: 0.220 },
+  "8V": { masa: 0.500 },
+  "5VX_OPTIBELT": { masa: 0.183 },
+  "5VX_GATES": { masa: 0.140 }
+};
+
+function esPulgadas(perfil) {
+  return ["3V", "5V", "8V", "5VX_OPTIBELT", "5VX_GATES"].includes(perfil);
+}
+
+function cambiarPerfil() {
+  const perfil = document.getElementById("perfil").value;
+  const label = document.getElementById("labelLongitud");
+  const badge = document.getElementById("longitudUnitBadge");
+  const help = document.getElementById("longitudUnitHelp");
+  const mDisplay = document.getElementById("mDisplay");
+
+  if (datosCorrea[perfil]) {
+    mDisplay.textContent = datosCorrea[perfil].masa.toFixed(3) + " kg/m";
+  }
+
+  if (esPulgadas(perfil)) {
+    label.textContent = "Longitud (Código RMA)";
+    badge.textContent = "cód.";
+    help.textContent = "Ej. 800 = 80 pulg";
+  } else {
+    label.textContent = "Longitud (L)";
+    badge.textContent = "mm";
+    help.textContent = "Métrica (mm)";
+  }
+
+}
+
+function resolverCentro(L, D, d) {
+  let C = (L - (Math.PI / 2) * (D + d)) / 2;
+  if (!Number.isFinite(C) || C <= 0) return NaN;
+
+  for (let i = 0; i < 60; i++) {
+    const f = 2 * C + (Math.PI / 2) * (D + d) + Math.pow(D - d, 2) / (4 * C) - L;
+    const df = 2 - Math.pow(D - d, 2) / (4 * C * C);
+    if (!Number.isFinite(df) || df === 0) return NaN;
+    C = C - f / df;
+    if (C <= 0 || !Number.isFinite(C)) return NaN;
+  }
+  return C;
+}
+
+function calcularK(d, D, C) {
+  if (C <= 0) return 0.96;
+  const val = (D - d) / C;
+  let K = 1 - 0.17 * Math.min(Math.max(val, 0), 1.2);
+  return Math.max(0.75, Math.min(1.0, K));
+}
+
+function frecuencia(tension, masa, tramo) {
+  if (tension <= 0 || masa <= 0 || tramo <= 0) return NaN;
+  return Math.sqrt(tension / (4 * masa * Math.pow(tramo, 2)));
+}
+
+function dibujarEsquema(d, D, C) {
+  const svg = document.getElementById("beltSvg");
+  if (!svg || !C || C <= 0) return;
+
+  const ratio = D / d;
+  document.getElementById("ratioDisplay").textContent = `Relación i = ${ratio.toFixed(2)}`;
+
+  const maxD = Math.max(d, D);
+  const r1 = Math.max(12, (d / maxD) * 35);
+  const r2 = Math.max(12, (D / maxD) * 45);
+  
+  const x1 = 70;
+  const x2 = 290;
+  const y1 = 70;
+  const y2 = 70;
+
+  svg.innerHTML = `
+    <!-- Línea de centros -->
+    <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#475569" stroke-dasharray="4,4" stroke-width="1.5"/>
+    
+    <!-- Trayectoria de la correa -->
+    <path d="M ${x1} ${y1 - r1} L ${x2} ${y2 - r2} A ${r2} ${r2} 0 0 1 ${x2} ${y2 + r2} L ${x1} ${y1 + r1} A ${r1} ${r1} 0 0 1 ${x1} ${y1 - r1}" 
+          fill="none" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Polea Motriz (d) -->
+    <circle cx="${x1}" cy="${y1}" r="${r1}" fill="#1E293B" stroke="#60A5FA" stroke-width="2.5"/>
+    <circle cx="${x1}" cy="${y1}" r="5" fill="#93C5FD"/>
+    <text x="${x1}" y="${y1 + 4}" font-size="9" font-weight="bold" fill="#F8FAFC" text-anchor="middle">d</text>
+    
+    <!-- Polea Conducida (D) -->
+    <circle cx="${x2}" cy="${y2}" r="${r2}" fill="#1E293B" stroke="#818CF8" stroke-width="2.5"/>
+    <circle cx="${x2}" cy="${y2}" r="6" fill="#C7D2FE"/>
+    <text x="${x2}" y="${y2 + 4}" font-size="10" font-weight="bold" fill="#F8FAFC" text-anchor="middle">D</text>
+
+    <!-- Etiquetas de cotas -->
+    <text x="180" y="30" font-size="10" font-weight="bold" fill="#38BDF8" text-anchor="middle">Tramo Libre (l)</text>
+    <text x="180" y="125" font-size="10" font-weight="bold" fill="#94A3B8" text-anchor="middle">Distancia C</text>
+  `;
+}
+
+function resetearResultadosIniciales() {
+  document.getElementById("errorBox").classList.add("hidden");
+  document.getElementById("ratioDisplay").textContent = "i = 0";
+  document.getElementById("cValue").textContent = "0 mm";
+  document.getElementById("tramoValue").textContent = "0 mm";
+  document.getElementById("fNew10Val").textContent = "0.0";
+  document.getElementById("tNew10Val").textContent = "0";
+  document.getElementById("rangoNew10").textContent = "0.0 - 0.0 Hz";
+  document.getElementById("fNewVal").textContent = "0.0";
+  document.getElementById("tNewVal").textContent = "0 N";
+  document.getElementById("fUsedVal").textContent = "0.0";
+  document.getElementById("tUsedVal").textContent = "0 N";
+  document.getElementById("vVal").textContent = "0.00 m/s";
+  document.getElementById("pPerBeltVal").textContent = "0.00 kW";
+  document.getElementById("fuVal").textContent = "0 N";
+  document.getElementById("kDisplay").textContent = "0.000";
+  document.getElementById("beltSvg").innerHTML = "";
+}
+
+function mostrarResultados() {
+  calcularEnVivo();
+}
+
+function calcularEnVivo() {
+  const dMM = Number(document.getElementById("d").value);
+  const DMM = Number(document.getElementById("D").value);
+  const P = Number(document.getElementById("P").value);
+  const rpm = Number(document.getElementById("rpm").value);
+  const perfil = document.getElementById("perfil").value;
+  const LInput = Number(document.getElementById("L").value);
+  const Z = Number(document.getElementById("Z").value);
+  const J = Number(document.getElementById("J").value) || 1.20;
+
+  const errorBox = document.getElementById("errorBox");
+  const errorMsg = document.getElementById("errorMsg");
+
+  if (!dMM || !DMM || !P || !rpm || !LInput || !Z || !perfil || !datosCorrea[perfil]) {
+    errorBox.classList.remove("hidden");
+    errorMsg.textContent = "Completa todos los campos con valores numéricos válidos.";
+    return;
+  }
+
+  let longitudMM = LInput;
+  if (esPulgadas(perfil)) {
+    if (LInput > 150) {
+      longitudMM = (LInput / 10) * 25.4;
+    } else {
+      longitudMM = LInput * 25.4;
+    }
+  }
+
+  const d = dMM / 1000;
+  const D = DMM / 1000;
+  const L = longitudMM / 1000;
+  const masa = datosCorrea[perfil].masa;
+
+  const C = resolverCentro(L, D, d);
+  if (!Number.isFinite(C) || C <= 0) {
+    errorBox.classList.remove("hidden");
+    errorMsg.textContent = "Geometría incompatible: la longitud de correa no permite una distancia entre centros válida.";
+    return;
+  }
+
+  const tramoCuadrado = Math.pow(C, 2) - Math.pow(D - d, 2) / 4;
+  if (tramoCuadrado <= 0) {
+    errorBox.classList.remove("hidden");
+    errorMsg.textContent = "No fue posible calcular el tramo libre. Revisa los diámetros.";
+    return;
+  }
+  const tramo = Math.sqrt(tramoCuadrado);
+
+  errorBox.classList.add("hidden");
+
+  // Factor K dinámico
+  const K = calcularK(d, D, C);
+  document.getElementById("kDisplay").textContent = `${K.toFixed(3)} (Dinámico)`;
+
+  // Velocidad tangencial
+  const v = (Math.PI * d * rpm) / 60;
+
+  // Tensiones (Fórmulas Optibelt / Gates)
+  const Tused = 510 * (((2.2 - K) * P * J) / (K * Z * v)) + (masa * Math.pow(v, 2)) / 1.11;
+  const Tnew = Tused * 1.50;
+  const Tnew10 = Tnew * 1.10;
+
+  // Frecuencias acústicas
+  const fUsed = frecuencia(Tused, masa, tramo);
+  const fNew = frecuencia(Tnew, masa, tramo);
+  const fNew10 = frecuencia(Tnew10, masa, tramo);
+
+  // Potencias y fuerzas
+  const potenciaPorCorrea = P / Z;
+  const fuerzaPorCorrea = (P * 1000) / v / Z;
+
+  // Renderizar valores en pantalla
+  document.getElementById("cValue").textContent = `${(C * 1000).toFixed(0)} mm`;
+  document.getElementById("tramoValue").textContent = `${(tramo * 1000).toFixed(0)} mm`;
+
+  document.getElementById("fNew10Val").textContent = fNew10.toFixed(1);
+  document.getElementById("tNew10Val").textContent = Tnew10.toFixed(0);
+  document.getElementById("rangoNew10").textContent = `${(fNew10 * 0.95).toFixed(1)} - ${(fNew10 * 1.05).toFixed(1)} Hz`;
+
+  document.getElementById("fNewVal").textContent = fNew.toFixed(1);
+  document.getElementById("tNewVal").textContent = `${Tnew.toFixed(0)} N`;
+
+  document.getElementById("fUsedVal").textContent = fUsed.toFixed(1);
+  document.getElementById("tUsedVal").textContent = `${Tused.toFixed(0)} N`;
+
+  document.getElementById("vVal").textContent = `${v.toFixed(2)} m/s`;
+  document.getElementById("pPerBeltVal").textContent = `${potenciaPorCorrea.toFixed(2)} kW`;
+  document.getElementById("fuVal").textContent = `${fuerzaPorCorrea.toFixed(0)} N`;
+
+  dibujarEsquema(d, D, C);
+}
+
+function mostrarModalJ() {
+  document.getElementById("modalJ").classList.remove("hidden");
+}
+function cerrarModalJ() {
+  document.getElementById("modalJ").classList.add("hidden");
+}
+function seleccionarJ(val) {
+  document.getElementById("J").value = val.toFixed(2);
+  cerrarModalJ();
+}
+
+function cargarEjemplo() {
+  document.getElementById("d").value = 160;
+  document.getElementById("D").value = 315;
+  document.getElementById("P").value = 15;
+  document.getElementById("rpm").value = 1450;
+  document.getElementById("perfil").value = "SPB";
+  document.getElementById("L").value = 2000;
+  document.getElementById("Z").value = 3;
+  document.getElementById("J").value = 1.20;
+  cambiarPerfil();
+}
+
+// La página inicia sin cálculos. Los resultados se muestran al pulsar "Mostrar resultados".
+resetearResultadosIniciales();
+cambiarPerfil();
+
+window.addEventListener("load", function () {
+  const pantallaCarga = document.getElementById("pantalla_carga");
+
+  if (!pantallaCarga) return;
+
+  setTimeout(function () {
+    pantallaCarga.classList.add("ocultar");
+
+    setTimeout(function () {
+      pantallaCarga.remove();
+    }, 500);
+  }, 1800);
+});
+</script>
+
+</body>
+</html>
