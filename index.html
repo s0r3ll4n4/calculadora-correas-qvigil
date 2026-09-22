@@ -795,19 +795,32 @@
             <label class="block text-xs font-bold text-slate-700 mb-1">Perfil de Correa</label>
             <select id="perfil" onchange="cambiarPerfil()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition">
               <option value="" selected disabled>Seleccione Correa</option>
-              <optgroup label="Métricas (mm)">
-                <option value="SPZ">SPZ (0.090 kg/m)</option>
-                <option value="SPA">SPA (0.130 kg/m)</option>
-                <option value="SPB">SPB (0.195 kg/m)</option>
-                <option value="SPC">SPC (0.350 kg/m)</option>
+              <optgroup label="Métricas Optibelt (mm)">
+                <option value="OPTIBELT_SPZ">SPZ (0.074 kg/m)</option>
+                <option value="OPTIBELT_SPA">SPA (0.123 kg/m)</option>
+                <option value="OPTIBELT_SPB">SPB (0.195 kg/m)</option>
+                <option value="OPTIBELT_SPC">SPC (0.377 kg/m)</option>
               </optgroup>
-              <optgroup label="Pulgadas (RMA)">
-                <option value="3V">3V (0.080 kg/m)</option>
-                <option value="5V">5V (0.220 kg/m)</option>
-                <option value="8V">8V (0.500 kg/m)</option>
-                <option value="5VX_OPTIBELT">5VX - Optibelt (0.183 kg/m)</option>
-                <option value="5VX_GATES">5VX - Gates (0.140 kg/m)</option>
-                <option value="A-49">A-49 (0.100 kg/m)</option>
+              <optgroup label="Pulgadas Optibelt (RMA)">
+                <option value="OPTIBELT_3V">3V (0.074 kg/m)</option>
+                <option value="OPTIBELT_5V">5V (0.195 kg/m)</option>
+                <option value="OPTIBELT_8V">8V (0.575 kg/m)</option>
+                <option value="OPTIBELT_5VX">5VX (0.183 kg/m)</option>
+              </optgroup>
+              <optgroup label="Métricas Gates (mm)">
+                <option value="GATES_SPZ">SPZ (0.072 kg/m)</option>
+                <option value="GATES_SPA">SPA (0.115 kg/m)</option>
+                <option value="GATES_SPB">SPB (0.186 kg/m)</option>
+                <option value="GATES_SPC">SPC (0.337 kg/m)</option>
+              </optgroup>
+              <optgroup label="Pulgadas Gates (RMA)">
+                <option value="GATES_3V">3V (0.072 kg/m)</option>
+                <option value="GATES_5V">5V (0.186 kg/m)</option>
+                <option value="GATES_8V">8V (0.510 kg/m)</option>
+                <option value="GATES_5VX">5VX (0.140 kg/m)</option>
+              </optgroup>
+              <optgroup label="SKF">
+                <option value="SKF_A49">A-49 (0.100 kg/m)</option>
               </optgroup>
             </select>
           </div>
@@ -1053,20 +1066,30 @@
 <!-- ================= JAVASCRIPT / LÓGICA DE CÁLCULO ================= -->
 <script>
 const datosCorrea = {
-  SPZ: { masa: 0.090 },
-  SPA: { masa: 0.130 },
-  SPB: { masa: 0.195 },
-  SPC: { masa: 0.350 },
-  "3V": { masa: 0.080 },
-  "5V": { masa: 0.220 },
-  "8V": { masa: 0.500 },
-  "5VX_OPTIBELT": { masa: 0.183 },
-  "5VX_GATES": { masa: 0.140 },
-  "A-49": { masa: 0.100 }
+  OPTIBELT_SPZ: { masa: 0.074, sistema: "metrico" },
+  OPTIBELT_SPA: { masa: 0.123, sistema: "metrico" },
+  OPTIBELT_SPB: { masa: 0.195, sistema: "metrico" },
+  OPTIBELT_SPC: { masa: 0.377, sistema: "metrico" },
+  OPTIBELT_3V:  { masa: 0.074, sistema: "rma" },
+  OPTIBELT_5V:  { masa: 0.195, sistema: "rma" },
+  OPTIBELT_8V:  { masa: 0.575, sistema: "rma" },
+  OPTIBELT_5VX: { masa: 0.183, sistema: "rma" },
+
+  GATES_SPZ: { masa: 0.072, sistema: "metrico" },
+  GATES_SPA: { masa: 0.115, sistema: "metrico" },
+  GATES_SPB: { masa: 0.186, sistema: "metrico" },
+  GATES_SPC: { masa: 0.337, sistema: "metrico" },
+  GATES_3V:  { masa: 0.072, sistema: "rma" },
+  GATES_5V:  { masa: 0.186, sistema: "rma" },
+  GATES_8V:  { masa: 0.510, sistema: "rma" },
+  GATES_5VX: { masa: 0.140, sistema: "rma" },
+
+  SKF_A49: { masa: 0.100, sistema: "rma" }
 };
 
+
 function esPulgadas(perfil) {
-  return ["3V", "5V", "8V", "5VX_OPTIBELT", "5VX_GATES", "A-49"].includes(perfil);
+  return datosCorrea[perfil]?.sistema === "rma";
 }
 
 function cambiarPerfil() {
@@ -1289,7 +1312,7 @@ function cargarEjemplo() {
   document.getElementById("D").value = 315;
   document.getElementById("P").value = 15;
   document.getElementById("rpm").value = 1450;
-  document.getElementById("perfil").value = "SPB";
+  document.getElementById("perfil").value = "OPTIBELT_SPB";
   document.getElementById("L").value = 2000;
   document.getElementById("Z").value = 3;
   document.getElementById("J").value = 1.20;
