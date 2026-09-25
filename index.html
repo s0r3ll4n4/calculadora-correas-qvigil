@@ -1,799 +1,76 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Q-Vigil | Tensión de Correas</title>
-  <link rel="icon" type="image/png" href="logo_qvigil.png">
-  <!-- Tailwind CSS para diseño moderno y responsive -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f5f7">
+  <meta name="description" content="Q-Vigil. Calculadora de tensión y frecuencia de correas de transmisión.">
+  <title>Q-Vigil · Tensión de correas</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%230071e3'/%3E%3Ccircle cx='29' cy='29' r='16' fill='none' stroke='white' stroke-width='5'/%3E%3Cpath d='M36 36L48 48' stroke='white' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <style>
-
-    /* ================= RESPONSIVE MÓVIL ================= */
-    @media (max-width: 640px) {
-      body {
-        padding: 0.75rem !important;
-      }
-
-      .max-w-6xl {
-        width: 100%;
-      }
-
-      header {
-        padding: 1rem !important;
-        border-radius: 1rem !important;
-        gap: 0.85rem !important;
-        align-items: flex-start !important;
-      }
-
-      header > div:first-child {
-        width: 100%;
-        gap: 0.75rem !important;
-        align-items: center;
-      }
-
-      header > div:last-child {
-        width: 100%;
-        display: grid !important;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.5rem !important;
-      }
-
-      header > div:last-child button {
-        width: 100%;
-        min-height: 2.5rem;
-        padding: 0.55rem 0.5rem !important;
-        font-size: 0.72rem !important;
-      }
-
-      header h1 {
-        font-size: 1.18rem !important;
-        line-height: 1.2 !important;
-      }
-
-      header p {
-        font-size: 0.68rem !important;
-        line-height: 1.35 !important;
-        margin-top: 0.2rem;
-      }
-
-      /* La polea siempre conserva proporción cuadrada */
-      header > div:first-child > div:first-child {
-        width: 3.5rem !important;
-        height: 3.5rem !important;
-        min-width: 3.5rem !important;
-        min-height: 3.5rem !important;
-        aspect-ratio: 1 / 1;
-        flex: 0 0 3.5rem !important;
-        padding: 0.3rem !important;
-      }
-
-      header > div:first-child > div:first-child img {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: contain !important;
-        display: block;
-      }
-
-      .grid.grid-cols-1.lg\:grid-cols-12 {
-        gap: 0.85rem !important;
-      }
-
-      .bg-white.border.border-slate-200.rounded-2xl.p-5 {
-        padding: 1rem !important;
-        border-radius: 1rem !important;
-      }
-
-      /* Encabezados de sección: evitar que se aprieten o desborden */
-      .bg-white.border.border-slate-200.rounded-2xl.p-5 > .flex.items-center.justify-between {
-        gap: 0.5rem;
-        align-items: flex-start;
-      }
-
-      .bg-white.border.border-slate-200.rounded-2xl.p-5 > .flex.items-center.justify-between > span {
-        text-align: right;
-        flex-shrink: 0;
-      }
-
-      /* Campos: una columna en móvil para que las unidades no choquen */
-      .grid.grid-cols-1.sm\:grid-cols-2 {
-        grid-template-columns: 1fr !important;
-        gap: 0.75rem !important;
-      }
-
-      input, select {
-        min-height: 2.75rem;
-        font-size: 0.9rem !important;
-      }
-
-      /* Esquema 2D con proporción estable */
-      .w-full.h-40 {
-        height: auto !important;
-        aspect-ratio: 16 / 7;
-        min-height: 8.5rem;
-      }
-
-      /* Tarjetas secundarias: mantenerlas en dos columnas, pero compactas */
-      .grid.grid-cols-2.gap-3 {
-        gap: 0.55rem !important;
-      }
-
-      .grid.grid-cols-2.gap-3 > div {
-        padding: 0.8rem !important;
-        min-width: 0;
-      }
-
-      .grid.grid-cols-2.gap-3 .text-\[11px\] {
-        font-size: 0.58rem !important;
-        line-height: 1.25 !important;
-      }
-
-      /* Métricas inferiores: conservar 3 columnas sin deformar */
-      .grid.grid-cols-3 {
-        gap: 0.35rem !important;
-      }
-
-      .grid.grid-cols-3 > div {
-        min-width: 0;
-        padding: 0.15rem;
-      }
-
-      .grid.grid-cols-3 span {
-        overflow-wrap: anywhere;
-      }
-
-      /* Tarjeta principal de resultados */
-      #resultsContainer > div:first-child {
-        padding: 1rem !important;
-      }
-
-      #resultsContainer .text-3xl {
-        font-size: 1.8rem !important;
-      }
-
-      #resultsContainer .text-2xl {
-        font-size: 1.35rem !important;
-      }
-
-      footer {
-        flex-direction: column !important;
-        text-align: center;
-        padding-bottom: 0.5rem;
-      }
-
-      /* Modal cómodo en pantallas pequeñas */
-      #modalJ > div {
-        max-height: calc(100vh - 2rem);
-        overflow-y: auto;
-        padding: 1rem !important;
-        border-radius: 1rem !important;
-      }
-    }
-
-    @media print {
-      body { background: white !important; padding: 0 !important; color: black !important; }
-      .no-print { display: none !important; }
-      .print-only { display: block !important; }
-      .shadow-sm, .shadow-md, .shadow-lg { box-shadow: none !important; }
-    }
-  
-
-  /* Cuadro de error */
-  .error-box {
-    width: 100%;
-    box-sizing: border-box;
-    background: linear-gradient(
-    90deg,
-    #7A141A 0%,
-    #B31B25 25%,
-    #D96A72 50%,
-    #B31B25 75%,
-    #7A141A 100%
-  );
-    border: none !important;
-    border-radius: 12px;
-    padding: 14px 16px;
-    color: #FFFFFF !important;
-    font-size: 12px;
-    line-height: 1.45;
-  }
-</style>
-
-<style>
-.aviso-importante {
-  width: 100%;
-  box-sizing: border-box;
-  background: linear-gradient(
-  90deg,
-  #7E775E 0%,
-  #999077 25%,
-  #D0C6AA 50%,
-  #999077 75%,
-  #7E775E 100%
-);
-  border: none;
-  border-radius: 12px;
-  padding: 14px 16px;
-  color: #FFFFFF;
-  font-size: 12px;
-  line-height: 1.45;
-}
-.aviso-texto strong {
-  font-weight: 800;
-  margin-right: 4px;
-}
-@media (max-width: 640px) {
-  .aviso-importante {
-    font-size: 11px;
-    padding: 12px 13px;
-  }
-}
-
-/* Ajuste responsive Q-Vigil */
-@media (max-width: 1023px) {
-  .qv-layout { grid-template-columns: minmax(0, 1fr) !important; }
-}
-
-@media (max-width: 640px) {
-  body { padding: 10px !important; }
-  .qv-layout { gap: 16px !important; }
-  .qv-form, .qv-results { width: 100%; min-width: 0; }
-  .qv-results .grid.grid-cols-2 { grid-template-columns: 1fr !important; }
-  .qv-results .grid.grid-cols-3 { grid-template-columns: 1fr !important; }
-  .qv-results .grid.grid-cols-3 > div { border-left: 0 !important; border-right: 0 !important; padding: 8px 0; }
-  header { padding: 16px !important; }
-  header h1 { font-size: 1.35rem !important; line-height: 1.2; }
-  header > div:last-child { width: 100%; }
-  header > div:last-child button { flex: 1; }
-}
-</style>
-
-<style id="protocolo-print-style">
-@media print {
-  @page { size: A4 portrait; margin: 12mm 13mm 14mm 13mm; }
-
-  html, body {
-    background:#fff !important;
-    color:#000 !important;
-    font-family: Arial, Helvetica, sans-serif !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  body {
-    padding:0 !important;
-    margin:0 !important;
-    font-size:10pt !important;
-    line-height:1.25 !important;
-  }
-
-  /* Ocultar controles de la aplicación */
-  .no-print,
-  button,
-  #errorBox,
-  #modalJ,
-  .zero-hint { display:none !important; }
-
-  .max-w-6xl {
-    max-width:none !important;
-    width:100% !important;
-    margin:0 !important;
-  }
-
-  /* ================= ENCABEZADO DEL PROTOCOLO ================= */
-  header {
-    background:#fff !important;
-    color:#000 !important;
-    box-shadow:none !important;
-    border:0 !important;
-    border-radius:0 !important;
-    padding:0 0 5mm !important;
-    margin:0 0 5mm !important;
-    display:block !important;
-    text-align:center !important;
-    border-bottom:1px solid #000 !important;
-  }
-
-  header > div:first-child {
-    display:block !important;
-    width:100% !important;
-  }
-
-  header > div:first-child > div:first-child { display:none !important; }
-
-  header h1 {
-    font-family:Arial, Helvetica, sans-serif !important;
-    font-size:20pt !important;
-    line-height:1.15 !important;
-    font-weight:700 !important;
-    color:#000 !important;
-    margin:0 !important;
-  }
-
-  header h1 { font-size:0 !important; }
-  header h1::after {
-    content:"Protocolo de Sistema de Transmisión";
-    font-family:Arial, Helvetica, sans-serif;
-    font-size:20pt;
-    line-height:1.15;
-    font-weight:700;
-    color:#000;
-  }
-
-  header p {
-    font-family:Arial, Helvetica, sans-serif !important;
-    font-size:14pt !important;
-    line-height:1.2 !important;
-    color:#000 !important;
-    margin:2.5mm 0 0 !important;
-  }
-
-  /* ================= ORDEN A4 ================= */
-  .qv-layout {
-    display:flex !important;
-    flex-direction:column !important;
-    gap:0 !important;
-  }
-
-  .qv-form,
-  .qv-results {
-    display:contents !important;
-  }
-
-  .qv-form > div,
-  .qv-results > div,
-  #resultsContainer > div,
-  footer {
-    break-inside:avoid !important;
-    page-break-inside:avoid !important;
-  }
-
-  /* Orden: geometría → esquema → parámetros → resultados → aviso */
-  .qv-form > div:nth-child(1) { order:10; }
-  .qv-results > div:nth-child(1) { order:20; }
-  .qv-form > div:nth-child(2) { order:30; }
-  .qv-form > div:nth-child(3) { order:40; }
-  .qv-results > div:nth-child(3) { order:50; }
-  footer { order:60; }
-
-  /* Botón Mostrar resultados nunca se imprime */
-  .qv-form > button { display:none !important; }
-
-  /* ================= SECCIONES ================= */
-  .qv-form > div,
-  .qv-results > div,
-  #resultsContainer > div {
-    width:100% !important;
-    box-sizing:border-box !important;
-  }
-
-  .qv-form > div,
-  .qv-results > div:first-child {
-    background:#fff !important;
-    border:1px solid #000 !important;
-    border-radius:8px !important;
-    box-shadow:none !important;
-    padding:4mm !important;
-    margin:0 0 4mm !important;
-  }
-
-  /* ================= GEOMETRÍA ================= */
-  .qv-form > div:nth-child(1) {
-    margin-bottom:3mm !important;
-  }
-
-  /* La geometría conserva sus dos valores en formato compacto */
-  .qv-form > div:nth-child(1) .grid {
-    display:grid !important;
-    grid-template-columns:1fr 1fr !important;
-    gap:4mm !important;
-  }
-
-  /* ================= ESQUEMA 2D ================= */
-  .qv-results > div:first-child {
-    padding:3.5mm !important;
-    margin-bottom:4mm !important;
-  }
-
-  .qv-results > div:first-child > div:first-child {
-    margin-bottom:2mm !important;
-  }
-
-  .qv-results > div:first-child .w-full.h-40 {
-    height:58mm !important;
-    min-height:0 !important;
-    aspect-ratio:auto !important;
-    background:#fff !important;
-    border:1px solid #000 !important;
-    border-radius:5px !important;
-    padding:2mm !important;
-  }
-
-  #beltSvg {
-    width:100% !important;
-    height:100% !important;
-  }
-
-  .qv-results > div:first-child .grid.grid-cols-2 {
-    display:grid !important;
-    grid-template-columns:1fr 1fr !important;
-    gap:3mm !important;
-    margin-top:3mm !important;
-  }
-
-  .qv-results > div:first-child .grid.grid-cols-2 > div {
-    background:#fff !important;
-    border:1px solid #000 !important;
-    border-radius:5px !important;
-    padding:2.5mm !important;
-  }
-
-  /* ================= FORMULARIO COMO FICHA TÉCNICA ================= */
-  input,
-  select {
-    appearance:none !important;
-    -webkit-appearance:none !important;
-    background:#fff !important;
-    color:#000 !important;
-    border:1px solid #000 !important;
-    border-radius:5px !important;
-    box-shadow:none !important;
-    min-height:0 !important;
-    height:auto !important;
-    padding:2.2mm 12mm 2.2mm 3mm !important;
-    font-family:Arial, Helvetica, sans-serif !important;
-    font-size:10pt !important;
-    font-weight:700 !important;
-  }
-
-  .qv-form .relative.flex.items-center > span:last-child {
-    color:#000 !important;
-  }
-
-  .qv-form .bg-slate-50 {
-    background:#fff !important;
-  }
-
-  .qv-form .border-slate-200\/80 {
-    border-color:#000 !important;
-    background:#fff !important;
-  }
-
-  /* ================= RESULTADOS ================= */
-  #resultsContainer {
-    display:block !important;
-    width:100% !important;
-    margin:0 !important;
-  }
-
-  #resultsContainer > div:first-child {
-    background:#fff !important;
-    color:#000 !important;
-    border:1px solid #000 !important;
-    border-radius:8px !important;
-    box-shadow:none !important;
-    padding:4mm !important;
-    margin:0 0 4mm !important;
-    position:relative !important;
-  }
-
-  #resultsContainer > div:first-child > .absolute { display:none !important; }
-
-  #resultsContainer > div:first-child .bg-emerald-400\/30 {
-    background:#fff !important;
-    border:1px solid #000 !important;
-    color:#000 !important;
-  }
-
-  #resultsContainer > div:first-child .grid {
-    display:grid !important;
-    grid-template-columns:1fr 1fr !important;
-    gap:6mm !important;
-  }
-
-  #resultsContainer > div:first-child .border-l {
-    border-left:1px solid #000 !important;
-  }
-
-  #resultsContainer > div:nth-child(2) {
-    display:grid !important;
-    grid-template-columns:1fr 1fr !important;
-    gap:4mm !important;
-    margin:0 0 4mm !important;
-  }
-
-  #resultsContainer > div:nth-child(2) > div,
-  #resultsContainer > div:nth-child(3) {
-    background:#fff !important;
-    border:1px solid #000 !important;
-    border-radius:8px !important;
-    box-shadow:none !important;
-  }
-
-  #resultsContainer > div:nth-child(3) {
-    padding:4mm !important;
-    margin:0 0 4mm !important;
-  }
-
-  #resultsContainer .text-emerald-200,
-  #resultsContainer .text-emerald-100,
-  #resultsContainer .text-blue-900,
-  #resultsContainer .text-blue-950,
-  #resultsContainer .text-slate-500,
-  #resultsContainer .text-slate-600,
-  #resultsContainer .text-slate-800,
-  #resultsContainer .text-slate-900 {
-    color:#000 !important;
-  }
-
-  #resultsContainer > div:first-child .text-3xl,
-  #resultsContainer > div:first-child .text-4xl {
-    font-size:22pt !important;
-  }
-
-  #resultsContainer > div:first-child .text-2xl,
-  #resultsContainer > div:first-child .text-3xl {
-    font-size:18pt !important;
-  }
-
-  /* Aviso técnico sobrio */
-  .aviso-importante {
-    background:#fff !important;
-    border:1px solid #000 !important;
-    border-radius:8px !important;
-    color:#000 !important;
-    padding:3.5mm 4mm !important;
-    font-family:Arial, Helvetica, sans-serif !important;
-    font-size:9pt !important;
-    line-height:1.35 !important;
-    margin:0 0 4mm !important;
-  }
-
-  .aviso-texto,
-  .aviso-texto strong { color:#000 !important; }
-
-  /* ================= TIPOGRAFÍA GENERAL ================= */
-  h2, h3, span, label, p, div, strong, select, input {
-    font-family:Arial, Helvetica, sans-serif !important;
-    color:#000 !important;
-  }
-
-  h2 {
-    font-size:12pt !important;
-    font-weight:700 !important;
-  }
-
-  label {
-    font-size:9pt !important;
-    font-weight:700 !important;
-  }
-
-  /* Evitar colores decorativos en impresión */
-  .bg-gradient-to-br,
-  .bg-gradient-to-b,
-  .bg-blue-50,
-  .bg-slate-50,
-  .bg-slate-100,
-  .bg-emerald-600,
-  .bg-teal-800 {
-    background:#fff !important;
-  }
-
-  .border-slate-100,
-  .border-slate-200,
-  .border-slate-300,
-  .border-emerald-500\/40,
-  .border-emerald-300\/40 {
-    border-color:#000 !important;
-  }
-
-  /* SVG en blanco y negro, sin perder la geometría */
-  #beltSvg line,
-  #beltSvg path,
-  #beltSvg circle,
-  #beltSvg text {
-    stroke:#000 !important;
-  }
-  #beltSvg text { fill:#000 !important; }
-  #beltSvg circle { fill:#fff !important; }
-
-  /* ================= PIE ================= */
-  footer {
-    border-top:1px solid #000 !important;
-    color:#000 !important;
-    background:#fff !important;
-    box-shadow:none !important;
-    padding:3mm 0 0 !important;
-    margin-top:2mm !important;
-    font-size:8pt !important;
-    line-height:1.2 !important;
-    display:flex !important;
-    justify-content:space-between !important;
-    gap:5mm !important;
-  }
-
-  /* Mantener juntas las tarjetas y secciones críticas */
-  .qv-form > div:nth-child(1),
-  .qv-results > div:first-child,
-  .qv-form > div:nth-child(2),
-  .qv-form > div:nth-child(3),
-  #resultsContainer > div:first-child,
-  #resultsContainer > div:nth-child(2),
-  #resultsContainer > div:nth-child(3),
-  .aviso-importante {
-    break-inside:avoid !important;
-    page-break-inside:avoid !important;
-  }
-}
-
-/* =========================================
-   PANTALLA DE CARGA Q-VIGIL
-   ========================================= */
-#pantalla_carga{
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  background:#FFFFFF;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:99999;
-  opacity:1;
-  visibility:visible;
-  transition:opacity 1.2s ease,visibility 1.2s ease;
-  padding:0;
-  margin:0;
-  box-sizing:border-box;
-  overflow:hidden;
-}
-.carga-contenido{
-  width:100%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:0;
-  margin:0;
-  box-sizing:border-box;
-  overflow:hidden;
-}
-.imagen-carga{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  object-position:center;
-  display:block;
-  margin:0;
-}
-.cargando{
-  display:none !important;
-}
-#pantalla_carga.ocultar{
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-}
-
-</style>
-
+    :root{color-scheme:light;--page:#f5f5f7;--ink:#1d1d1f;--muted:#6e6e78;--soft:#878791;--blue:#0071e3;--blue-hover:#0077ed;--line:rgba(35,40,55,.09);--panel:rgba(255,255,255,.77);--solid:#fff;--field:rgba(245,245,249,.9);--glass:rgba(255,255,255,.62);--edge:rgba(255,255,255,.92);--shadow:0 6px 28px rgba(29,35,58,.035),0 1px 2px rgba(29,35,58,.025);--blue-wash:rgba(0,113,227,.065);--green:#258347;--danger:#b63131;--focus:0 0 0 4px rgba(0,113,227,.14);--radius:28px}
+    [data-theme="dark"]{color-scheme:dark;--page:#0e1016;--ink:#f5f5f7;--muted:#afb2c0;--soft:#999eae;--blue:#67afff;--blue-hover:#398fed;--line:rgba(222,230,255,.11);--panel:rgba(27,30,42,.83);--solid:#202432;--field:rgba(17,20,31,.65);--glass:rgba(34,38,53,.7);--edge:rgba(255,255,255,.11);--shadow:0 8px 32px rgba(0,0,0,.11);--blue-wash:rgba(61,142,255,.13);--green:#75d996;--danger:#ff9898;--focus:0 0 0 4px rgba(85,162,255,.23)}
+    *,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:108px}body{margin:0;background:var(--page);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.45;transition:background .3s,color .3s}button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-color:transparent}button,a{touch-action:manipulation}button{cursor:pointer;color:inherit}button:disabled{cursor:default;opacity:.45}a{color:inherit;text-decoration:none}button{border:0;background:none}button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:4px}input:focus,select:focus{outline:none}svg{display:block}h1,h2,h3,p{margin:0}fieldset{border:0;padding:0;margin:0;min-width:0}legend{padding:0}button svg{flex-shrink:0}.icon{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}.hidden{display:none!important}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.skip{position:fixed;top:-80px;left:24px;z-index:100;background:var(--solid);border-radius:12px;padding:12px}.skip:focus{top:16px}
+    .atmosphere{position:absolute;inset:0 0 auto;height:1100px;overflow:hidden;pointer-events:none;z-index:-1;background:radial-gradient(ellipse 37% 30% at 75% 50%,rgba(164,195,255,.2),transparent 100%),radial-gradient(ellipse 35% 28% at 90% 23%,rgba(204,186,246,.16),transparent 100%),radial-gradient(ellipse 40% 35% at 12% 44%,rgba(182,217,238,.14),transparent 100%)}.atmosphere::after{content:"";position:absolute;left:50%;top:320px;width:550px;height:520px;background:radial-gradient(ellipse,rgba(164,195,255,.17),transparent 70%);filter:blur(30px)}[data-theme="dark"] .atmosphere{opacity:.48}
+    .topbar-wrap{position:fixed;top:18px;left:24px;right:24px;z-index:20}.topbar{max-width:1140px;margin:0 auto;height:60px;padding:7px 11px 7px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px;background:var(--glass);border:1px solid var(--edge);box-shadow:0 8px 30px rgba(33,45,73,.07),inset 0 1px 0 var(--edge);border-radius:99px;backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%)}.brand{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:650;letter-spacing:-.6px;white-space:nowrap}.brand .icon{width:25px;height:25px;stroke-width:2.2}.nav-links{display:flex;gap:6px;align-items:center}.nav-links a,.nav-links button{font-size:12px;font-weight:500;padding:10px 18px;border-radius:30px;color:var(--muted);transition:background .2s,color .2s}.nav-links .selected{background:var(--solid);color:var(--ink);box-shadow:0 1px 6px rgba(20,30,60,.055)}.nav-links a:hover,.nav-links button:hover{color:var(--ink);background:var(--field)}.top-actions{display:flex;gap:8px;align-items:center}.icon-button{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:transparent;transition:background .2s,transform .2s}.icon-button:hover{background:var(--field)}.icon-button:active{transform:scale(.95)}.print-button{display:flex;gap:7px;align-items:center;justify-content:center;border-radius:24px;min-height:39px;padding:0 17px;font-size:12px;font-weight:550;background:var(--ink);color:var(--page);transition:opacity .2s}.print-button .icon{width:16px;height:16px}.print-button:hover{opacity:.82}.moon-icon{display:block}.sun-icon{display:none}[data-theme="dark"] .moon-icon{display:none}[data-theme="dark"] .sun-icon{display:block}
+    .hero{max-width:1000px;margin:0 auto;text-align:center;padding:127px 24px 43px}.eyebrow{font-size:11px;letter-spacing:2.3px;font-weight:650;color:var(--muted);text-transform:uppercase}.hero h1{font-size:clamp(44px,5.4vw,70px);line-height:1.08;letter-spacing:-3.4px;font-weight:650;margin:14px 0 17px}.hero h1 span{background:linear-gradient(110deg,#006edc 10%,#7265d5 85%);background-clip:text;-webkit-background-clip:text;color:transparent}[data-theme="dark"] .hero h1 span{background-image:linear-gradient(110deg,#83c1ff,#bdaeff)}.hero .intro{font-size:17px;line-height:1.55;color:var(--muted);font-weight:400;max-width:560px;margin:0 auto}.hero-meta{margin:18px 0 0;display:flex;justify-content:center;align-items:center;gap:12px;font-size:10px;letter-spacing:.15px;color:var(--muted)}.dot{display:inline-block;width:5px;height:5px;vertical-align:middle;border-radius:50%;background:var(--green);margin-right:5px}.meta-divider{height:11px;width:1px;background:var(--line)}
+    main{max-width:1140px;margin:0 auto;padding:0 0 38px}.workspace-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 4px 18px}.workspace-title h2{font-size:19px;font-weight:600;letter-spacing:-.55px}.workspace-title .tools{display:flex;align-items:center;gap:16px}.text-button{font-size:12px;color:var(--blue);display:inline-flex;align-items:center;gap:6px;padding:7px 0;font-weight:500}.text-button .icon{width:14px;height:14px}.text-button:hover{text-decoration:underline}.text-button.muted{color:var(--muted)}.workspace{display:grid;grid-template-columns:1.03fr 1fr;gap:22px;align-items:start}.card{border:1px solid var(--edge);border-radius:var(--radius);box-shadow:var(--shadow);background:var(--panel);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}.form-card{padding:27px 28px 24px}.card-heading{display:flex;align-items:center;gap:11px;margin-bottom:23px}.heading-icon{color:var(--blue);width:34px;height:34px;border-radius:11px;background:var(--blue-wash);display:grid;place-items:center}.heading-icon .icon{width:19px;height:19px}.card-heading h3{font-size:17px;font-weight:600;letter-spacing:-.4px}.card-heading p{font-size:11px;color:var(--muted);margin-top:1px}.form-section+.form-section{margin-top:22px;border-top:1px solid var(--line);padding-top:20px}.section-label{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:12px;font-weight:650;letter-spacing:-.1px}.step{font-size:10px;font-weight:600;line-height:20px;text-align:center;width:20px;height:20px;border:1px solid var(--line);color:var(--muted);border-radius:50%;background:var(--solid)}.fields{display:grid;grid-template-columns:1fr 1fr;gap:15px 16px}.field{min-width:0}.label-row{display:flex;align-items:center;justify-content:space-between;gap:4px;min-height:19px;margin-bottom:7px}.label-row label{font-size:11px;font-weight:550;color:var(--muted);white-space:nowrap}.symbol{color:var(--soft);font-weight:400;margin-left:2px}.helper-inline{font-size:9px;color:var(--muted);white-space:nowrap}.field-shell{position:relative;display:flex;align-items:center;min-width:0;border:1px solid var(--line);background:var(--field);border-radius:13px;height:49px;transition:border-color .2s,box-shadow .2s,background .2s}.field-shell:focus-within{background:var(--solid);border-color:var(--blue);box-shadow:var(--focus)}.field-shell input,.field-shell select{width:100%;height:100%;min-width:0;padding:0 14px;font-size:16px;font-weight:500;background:none;border:0;color:var(--ink);border-radius:inherit;letter-spacing:-.3px}.field-shell input{padding-right:49px;font-variant-numeric:tabular-nums}.field-shell input::placeholder{color:#9698a2;font-weight:400}.field-shell input::-webkit-outer-spin-button,.field-shell input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.field-shell input[type=number]{-moz-appearance:textfield;appearance:textfield}.field-shell select{appearance:none;-webkit-appearance:none;padding-right:33px;font-size:12px;font-weight:500;letter-spacing:-.1px;cursor:pointer;text-overflow:ellipsis}.field-shell select:invalid{color:var(--muted)}.field-shell option,.field-shell optgroup{background:var(--solid);color:var(--ink)}.field-shell .unit{position:absolute;right:13px;color:var(--soft);font-size:10px;pointer-events:none;letter-spacing:.15px}.select-chevron{position:absolute;right:12px;width:13px;height:13px;color:var(--muted);pointer-events:none}.help-button{padding:0;min-height:19px;display:flex;align-items:center;gap:3px;font-size:10px;color:var(--blue)}.help-button .icon{width:13px;height:13px}.field-shell:has(input[aria-invalid=true]),.field-shell:has(select[aria-invalid=true]){border-color:var(--danger)}.constants{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding:12px 14px;border-radius:12px;background:var(--field)}.constant{display:flex;flex-direction:column;gap:3px}.constant:last-child{text-align:right}.constant span{font-size:9px;color:var(--muted)}.constant strong{font-size:11px;font-weight:550;font-variant-numeric:tabular-nums}.calculate{width:100%;min-height:48px;margin-top:20px;border-radius:99px;padding:12px 18px;display:flex;justify-content:center;align-items:center;gap:11px;background:#0071e3;color:#fff;font-size:13px;font-weight:550;box-shadow:0 4px 12px rgba(0,113,227,.14);transition:background .2s,box-shadow .2s,transform .2s}.calculate .icon{width:17px;height:17px}.calculate:hover{background:#0077ed;box-shadow:0 6px 18px rgba(0,113,227,.23)}.calculate:active{transform:scale(.99)}.form-footnote{color:var(--muted);font-size:9px;text-align:center;margin-top:10px}.error-box{font-size:12px;font-weight:450;line-height:1.6;border:1px solid rgba(200,55,55,.16);background:rgba(215,60,60,.055);color:var(--danger);padding:12px 14px;border-radius:12px;margin-top:14px}
+    .results-column{display:grid;gap:18px;min-width:0}.result-card{position:relative;isolation:isolate;overflow:hidden;padding:25px 27px 22px;background:linear-gradient(145deg,rgba(255,255,255,.9) 0%,rgba(245,248,255,.6) 52%,rgba(235,232,255,.6) 100%);box-shadow:0 8px 42px rgba(93,111,167,.075),inset 0 1px 1px var(--edge)}.result-card::before{content:"";position:absolute;inset:50px -45px auto auto;width:220px;height:220px;background:radial-gradient(circle,rgba(153,191,252,.2),transparent 70%);z-index:-1;pointer-events:none}.result-card::after{content:"";position:absolute;bottom:35px;left:-50px;width:220px;height:220px;background:radial-gradient(circle,rgba(188,181,245,.11),transparent 70%);z-index:-1;pointer-events:none}[data-theme="dark"] .result-card{background:linear-gradient(135deg,rgba(29,41,64,.9),rgba(28,31,50,.75) 58%,rgba(46,39,69,.8))}.result-header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:26px}.result-header h3{font-size:14px;font-weight:600;letter-spacing:-.2px}.status{display:inline-flex;align-items:center;gap:6px;min-height:23px;padding:4px 9px;border-radius:99px;border:1px solid var(--line);font-size:9px;color:var(--muted);background:var(--glass);white-space:nowrap}.status::before{content:"";width:4px;height:4px;background:var(--soft);border-radius:50%}.has-results .status{color:var(--green);border-color:rgba(35,140,68,.13);background:rgba(72,164,85,.04)}.has-results .status::before{background:var(--green)}.result-eyebrow{font-size:11px;color:var(--muted);font-weight:500}.result-title-row{display:flex;gap:8px;align-items:center;margin-top:5px}.result-title-row h4{font-size:13px;font-weight:550;margin:0;letter-spacing:-.1px}.tiny-pill{font-size:8px;line-height:1;border-radius:8px;padding:4px 7px;color:var(--blue);border:1px solid rgba(0,113,227,.13);background:var(--blue-wash)}.main-value-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;margin-bottom:18px}.frequency{display:flex;align-items:baseline;gap:7px;white-space:nowrap}.frequency .number{font-size:clamp(58px,6.3vw,86px);line-height:1.1;font-weight:570;letter-spacing:-5px;font-variant-numeric:tabular-nums;color:var(--ink);transition:color .3s}.frequency .hz{font-size:23px;font-weight:400;letter-spacing:-.6px;color:var(--muted);margin-left:1px}.has-results .frequency .number{color:var(--blue)}.tension{padding-left:19px;border-left:1px solid var(--line);text-align:left;min-width:112px}.tension-label{font-size:9px;color:var(--muted);display:block;margin-bottom:5px}.tension strong{font-size:25px;font-weight:550;line-height:1.3;letter-spacing:-.7px;font-variant-numeric:tabular-nums}.tension .unit{font-size:12px;color:var(--muted);font-weight:400;margin-left:3px}.range-block{padding:13px 15px;background:rgba(255,255,255,.48);border:1px solid var(--edge);border-radius:15px}.range-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10px;color:var(--muted)}.range-head strong{font-size:10px;font-weight:550;color:var(--ink);font-variant-numeric:tabular-nums}.range-track{margin:14px 0 2px;height:4px;border-radius:10px;background:linear-gradient(90deg,rgba(124,153,201,.08),rgba(87,155,243,.3) 20%,#498be5 45%,#9b86ed 60%,rgba(162,136,232,.24) 84%,rgba(148,131,189,.05));position:relative}.range-track::after{content:"";position:absolute;left:50%;top:-4px;width:2px;height:12px;border-radius:2px;background:var(--ink);box-shadow:0 0 0 3px rgba(255,255,255,.7)}.range-labels{display:flex;justify-content:space-between;color:var(--soft);font-size:8px;margin-top:5px}.alternate-values{display:grid;grid-template-columns:1fr 1fr;margin-top:20px;padding-top:18px;border-top:1px solid var(--line);gap:20px}.alternate+.alternate{border-left:1px solid var(--line);padding-left:20px}.alternate-label{font-size:10px;color:var(--muted);margin-bottom:4px}.alternate-value{display:flex;align-items:baseline;gap:4px}.alternate-value strong{font-size:26px;line-height:1.2;font-weight:550;letter-spacing:-1px;font-variant-numeric:tabular-nums}.alternate-value span{font-size:11px;color:var(--muted)}.alternate-tension{font-size:10px;color:var(--muted);margin-top:4px}.alternate-tension strong{font-weight:500;color:var(--ink)}[data-theme="dark"] .range-block{background:rgba(12,18,30,.2)}[data-theme="dark"] .range-track::after{box-shadow:0 0 0 3px rgba(29,34,50,.8)}.result-card.pulse{animation:resultFlash .65s ease}@keyframes resultFlash{0%{box-shadow:0 0 0 4px rgba(0,113,227,.15)}100%{box-shadow:0 8px 42px rgba(93,111,167,.075)}}
+    .diagram-card{padding:21px 24px 19px;overflow:hidden}.diagram-title{display:flex;justify-content:space-between;align-items:center;gap:8px}.diagram-title h3{font-size:12px;font-weight:600}.ratio-badge{font-size:9px;color:var(--muted);padding:3px 7px;border:1px solid var(--line);border-radius:99px;font-variant-numeric:tabular-nums}.diagram-viewport{position:relative;height:141px;margin:8px -4px 0;background:radial-gradient(ellipse at 50% 75%,rgba(161,188,234,.10),transparent 68%)}#beltSvg{width:100%;height:100%;overflow:visible}.diagram-note{font-size:8px;color:var(--soft);text-align:center;margin:0 0 11px}.diagram-numbers{display:grid;grid-template-columns:1fr 1fr;gap:14px;border-top:1px solid var(--line);padding-top:12px}.diagram-numbers>div{display:flex;flex-direction:column;gap:4px}.diagram-numbers>div+div{padding-left:18px;border-left:1px solid var(--line)}.diagram-numbers span{font-size:9px;color:var(--muted)}.diagram-numbers strong{font-size:15px;letter-spacing:-.3px;font-weight:550;font-variant-numeric:tabular-nums}.metric-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:16px 12px;border-radius:20px}.metric{text-align:center;min-width:0}.metric+.metric{border-left:1px solid var(--line)}.metric span{display:block;color:var(--muted);font-size:8px;margin-bottom:4px}.metric strong{display:block;font-size:12px;font-weight:550;font-variant-numeric:tabular-nums;letter-spacing:-.2px;overflow-wrap:anywhere}.technical-note{display:flex;align-items:flex-start;gap:10px;margin:24px 6px 0;padding-bottom:24px;border-bottom:1px solid var(--line);color:var(--muted);font-size:10px;line-height:1.75}.technical-note .icon{width:15px;height:15px;margin-top:2px;flex-shrink:0}.technical-note strong{color:var(--ink);font-weight:550}.footer{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:17px 6px 5px;font-size:9px;color:var(--muted)}.footer-brand{font-weight:550;color:var(--ink)}.footer-detail{font-size:8px;color:var(--soft);margin-top:3px}.footer-note{font-size:8px;max-width:230px;text-align:right;color:var(--soft)}
+    .modal-backdrop{position:fixed;inset:0;z-index:60;background:rgba(28,33,50,.25);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:24px}.modal-card{width:100%;max-width:490px;padding:27px;background:var(--panel);box-shadow:0 30px 100px rgba(10,20,45,.18);max-height:calc(100dvh - 48px);overflow-y:auto;overscroll-behavior:contain}.modal-head{display:flex;justify-content:space-between;gap:16px;align-items:center}.modal-head h2{font-size:23px;font-weight:600;letter-spacing:-.8px}.modal-head .icon-button{background:var(--field);width:30px;height:30px}.modal-head .icon{width:16px;height:16px}.modal-card>p{margin:14px 0 20px;color:var(--muted);font-size:12px;line-height:1.65}.factor-options{display:grid;gap:9px}.factor-option{display:flex;align-items:center;justify-content:space-between;gap:16px;text-align:left;border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--field);transition:background .2s,border-color .2s}.factor-option:hover{background:var(--blue-wash);border-color:var(--blue)}.factor-option strong{font-size:12px;font-weight:600;display:block;margin-bottom:4px}.factor-option small{font-size:10px;line-height:1.6;color:var(--muted);display:block}.factor-value{font-size:18px;color:var(--blue);font-weight:550;letter-spacing:-.6px}.modal-footnote{font-size:10px;color:var(--muted);margin-top:16px;line-height:1.7}.toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,15px);opacity:0;z-index:70;border-radius:99px;padding:12px 20px;background:var(--ink);color:var(--page);box-shadow:0 6px 30px rgba(10,20,45,.15);font-size:12px;pointer-events:none;transition:opacity .2s,transform .2s;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}.mobile-dock{display:none}
+    main,.workspace,.workspace>*,.results-column>*,.result-card{min-width:0}.frequency{flex-shrink:0}
+    @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.topbar,.card,.mobile-dock{background:var(--solid)}}
+    @media(min-width:1200px){.form-card{padding-top:27px}.main-value-row{margin-top:12px}}
+    @media(max-width:1200px){main{margin:0 28px}.topbar{max-width:none}.hero{padding-top:124px}.frequency .number{font-size:76px}.result-card{padding:25px 23px 22px}.form-card{padding:25px 24px}.tension{min-width:104px;padding-left:14px}.helper-inline{font-size:8px}.help-button{font-size:9px}}
+    @media(max-width:1000px) and (min-width:761px){.workspace{gap:16px;grid-template-columns:1.04fr 1fr}.form-card{padding:22px 20px}.fields{gap:14px 11px}.result-card{padding:22px 20px}.frequency .number{font-size:63px;letter-spacing:-3.5px}.frequency .hz{font-size:19px}.tension{min-width:86px;padding-left:10px}.tension strong{font-size:22px}.tension-label{font-size:8px}.hero h1{font-size:60px}.label-row label{font-size:10px}.helper-inline{display:none}.help-button span{display:none}.nav-links a,.nav-links button{padding:9px 13px}.range-head{font-size:9px}.range-head strong{font-size:9px}.diagram-card{padding:20px}.constant strong{font-size:10px}.main-value-row{margin-top:20px;margin-bottom:26px}.alternate-values{margin-top:25px;padding-top:22px}.result-header{margin-bottom:32px}}
+    @media(max-width:760px){html{scroll-padding-top:91px}.topbar-wrap{left:16px;right:16px;top:12px}.topbar{height:55px;padding:6px 8px 6px 18px}.brand{font-size:18px;gap:8px}.brand .icon{width:22px;height:22px}.nav-links{display:none}.print-button{width:37px;min-height:37px;padding:0}.print-button span{display:none}.icon-button{width:37px;height:37px}.top-actions{gap:5px}.hero{padding:105px 22px 32px}.eyebrow{font-size:9px;letter-spacing:2px}.hero h1{font-size:46px;letter-spacing:-2.1px;line-height:1.06;margin-top:15px;margin-bottom:15px}.hero h1 span{display:block}.hero .intro{font-size:14px;line-height:1.6;max-width:310px}.hero-meta{font-size:9px;gap:10px;margin-top:15px}main{margin:0 16px;padding-bottom:110px}.workspace-title{margin:0 4px 14px;gap:8px}.workspace-title h2{font-size:16px;letter-spacing:-.4px}.workspace-title .tools{gap:12px}.text-button{font-size:10px}.text-button .icon{width:13px;height:13px}.text-button.muted span{display:none}.workspace{grid-template-columns:1fr;gap:20px}.form-card{padding:23px 22px}.card-heading{margin-bottom:24px}.form-section+.form-section{padding-top:20px;margin-top:21px}.field-shell{height:50px}.field-shell select{font-size:14px}.label-row label{font-size:11px}.help-button{font-size:10px}.helper-inline{font-size:9px}.belt-fields .profile-field{grid-column:1/-1}.belt-fields .service-field{grid-column:1/-1}.service-field .field-shell{max-width:none}.service-field .label-row{max-width:none}.constants{margin-top:16px}.constant span{font-size:9px}.constant strong{font-size:11px}.calculate{min-height:50px;font-size:14px}.form-footnote{font-size:10px}.result-card{padding:25px 24px}.result-header{margin-bottom:28px}.frequency .number{font-size:83px;letter-spacing:-4.5px}.frequency .hz{font-size:24px}.main-value-row{margin-top:15px;margin-bottom:23px}.tension{min-width:110px;padding-left:18px}.tension strong{font-size:26px}.tension-label{font-size:9px}.result-title-row h4{font-size:13px}.range-head,.range-head strong{font-size:10px}.alternate-values{padding-top:20px;margin-top:22px}.alternate-value strong{font-size:28px}.alternate-label{font-size:11px}.alternate-tension{font-size:11px}.diagram-card{padding:22px}.diagram-viewport{height:153px}.diagram-title h3{font-size:13px}.diagram-numbers span{font-size:10px}.diagram-numbers strong{font-size:16px}.diagram-note{font-size:9px}.metric-strip{padding:17px 10px}.metric span{font-size:9px}.metric strong{font-size:13px}.technical-note{font-size:10px;gap:8px;margin-top:22px}.footer{align-items:flex-start;flex-direction:column;gap:10px}.footer-note{text-align:left;max-width:none}.footer-detail,.footer-note{font-size:9px}.mobile-dock{position:fixed;bottom:max(13px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:30;display:flex;align-items:center;justify-content:space-evenly;gap:4px;padding:6px;border:1px solid var(--edge);border-radius:99px;background:var(--glass);box-shadow:0 8px 32px rgba(31,43,74,.14),inset 0 1px 0 var(--edge);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);width:min(300px,calc(100vw - 48px))}.mobile-dock a,.mobile-dock button{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;flex:1;min-height:47px;border-radius:99px;font-size:8px;color:var(--muted);transition:background .2s,color .2s}.mobile-dock .active{background:var(--solid);color:var(--blue);box-shadow:0 1px 6px rgba(20,30,60,.05)}.mobile-dock .icon{width:18px;height:18px}.modal-backdrop{padding:16px}.modal-card{max-height:calc(100dvh - 32px);padding:23px}.modal-head h2{font-size:22px}.toast{bottom:88px;max-width:calc(100vw - 32px);white-space:normal;text-align:center;font-size:11px}.atmosphere{height:1600px;background:radial-gradient(ellipse 70% 22% at 90% 20%,rgba(185,177,248,.14),transparent 100%),radial-gradient(ellipse 100% 23% at 20% 45%,rgba(152,201,241,.16),transparent 100%)}.atmosphere::after{left:-100px;top:300px;width:500px;height:550px}}
+    @media(max-width:360px){.hero h1{font-size:42px}.form-card{padding:21px 18px}.fields{gap:14px 12px}.label-row label{font-size:10px}.frequency .number{font-size:67px}.frequency .hz{font-size:20px}.tension{min-width:90px;padding-left:11px}.tension-label{font-size:8px}.tension strong{font-size:23px}.result-card{padding:24px 20px}.range-head,.range-head strong{font-size:9px}.workspace-title h2{font-size:15px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+    @media(prefers-contrast:more){:root{--muted:#44444b;--soft:#555560;--line:rgba(0,0,0,.25);--glass:rgba(255,255,255,.96)}[data-theme="dark"]{--muted:#d3d5de;--soft:#c2c6d4;--glass:rgba(24,28,40,.97)}.card{background:var(--solid)}}
+    @media print{@page{size:A4 portrait;margin:11mm}:root,[data-theme="dark"]{--page:white;--ink:#161616;--muted:#555;--soft:#666;--line:#ddd;--panel:white;--solid:white;--field:#f7f8fa;--edge:#ddd;--blue:#005cba;--blue-wash:#f1f6ff}.no-print,.topbar-wrap,.mobile-dock,.atmosphere,.toast,.hero-meta,.workspace-title,.modal-backdrop,.calculate,.form-footnote,.help-button{display:none!important}html,body{background:white!important;color:#161616!important;font-size:11px;-webkit-print-color-adjust:exact;print-color-adjust:exact}.hero{padding:0 0 18px;text-align:left;max-width:none}.hero .eyebrow{font-size:8px;letter-spacing:1px}.hero .eyebrow::before{content:"Q-VIGIL · "}.hero h1{font-size:28px;line-height:1.2;letter-spacing:-1px;margin:4px 0 5px}.hero h1 span{color:#005cba;background:none;display:inline}.hero .intro{font-size:10px;max-width:none;margin:0}main{max-width:none;margin:0;padding:0}.workspace{grid-template-columns:1fr 1fr;gap:12px;align-items:start}.card{box-shadow:none;backdrop-filter:none;background:white;border:1px solid #ddd;border-radius:15px;break-inside:avoid}.form-card{padding:17px}.card-heading{margin-bottom:15px}.card-heading h3{font-size:13px}.card-heading p{font-size:8px}.heading-icon{width:26px;height:26px}.section-label{font-size:10px;margin-bottom:10px}.form-section+.form-section{padding-top:14px;margin-top:14px}.fields{gap:10px}.label-row{min-height:15px;margin-bottom:4px}.label-row label{font-size:8px}.helper-inline{font-size:7px}.field-shell{height:34px;border-radius:8px}.field-shell input{font-size:12px;padding-left:9px;padding-right:30px}.field-shell select{font-size:8px;padding-left:8px;padding-right:20px}.field-shell .unit{font-size:7px;right:8px}.select-chevron{width:9px;right:7px}.constants{padding:10px;margin-top:14px}.constant span{font-size:7px}.constant strong{font-size:8px}.result-card{padding:17px;background:linear-gradient(130deg,#f7fbff,#f7f4ff)!important}.result-card::before,.result-card::after{display:none}.result-header{margin-bottom:20px}.result-header h3{font-size:11px}.status{font-size:7px}.result-eyebrow{font-size:8px}.result-title-row h4{font-size:10px}.tiny-pill{font-size:6px}.main-value-row{margin:10px 0 15px;gap:8px}.frequency .number{font-size:58px;letter-spacing:-3px}.frequency .hz{font-size:17px}.tension{min-width:78px;padding-left:10px}.tension strong{font-size:20px}.tension-label{font-size:7px}.tension .unit{font-size:10px}.range-block{padding:10px}.range-head,.range-head strong{font-size:7px}.range-labels{font-size:7px}.alternate-values{margin-top:15px;padding-top:13px;gap:10px}.alternate+.alternate{padding-left:10px}.alternate-label{font-size:8px}.alternate-value strong{font-size:23px}.alternate-value span,.alternate-tension{font-size:8px}.results-column{gap:12px}.diagram-card{padding:15px}.diagram-title h3{font-size:10px}.diagram-viewport{height:115px}.ratio-badge,.diagram-note{font-size:7px}.diagram-numbers{padding-top:10px}.diagram-numbers span{font-size:8px}.diagram-numbers strong{font-size:11px}.metric-strip{padding:12px 6px;gap:4px}.metric span{font-size:7px}.metric strong{font-size:9px}.technical-note{font-size:8px;line-height:1.6;margin:14px 0 0;padding-bottom:12px}.footer{font-size:7px;padding:10px 0 0;flex-direction:row}.footer-detail,.footer-note{font-size:7px}.belt-fields .profile-field,.belt-fields .service-field{grid-column:auto}}
+  </style>
 </head>
-<body class="bg-slate-100 text-slate-800 antialiased p-3 sm:p-6 font-sans">
-  <!-- =========================================
-       PANTALLA DE CARGA Q-VIGIL
-       ========================================= -->
-  <div id="pantalla_carga" aria-label="Cargando Q-Vigil">
-    <div class="carga-contenido">
-      <img src="pantalla_carga.png" alt="Q-Vigil" class="imagen-carga">
-    </div>
-  </div>
-
-
-<div class="max-w-6xl mx-auto space-y-6">
-
-  <!-- ================= HEADER ================= -->
-  <header class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 rounded-2xl p-5 text-white shadow-lg flex flex-wrap items-center justify-between gap-4">
-    <div class="flex items-center gap-4">
-      <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center border border-white/20 shadow-inner overflow-hidden p-1">
-        <img
-          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAANUklEQVR42u2dSXIbORBF6QpGtO7UOllrrZvpUNqpF3TQNIcqDDkiH5a2WMTwfg4sIPHr5+fnRKNVbWemgKba3t4/9v/g++vTsXu/8AA0S9xbmqUkEAAtCvcuYkAAtIjcmykBAdCio68qAwRAy4G+kgwQAC0T+uIyQAC0fOgLagAB0LLSLyIDBEDTQr+Xy5mvG9YAAqBJ4igSlw8rYeDbEQBNAEGlH+kHlNDbEwRAi4i+WZcQAG0QNeNNbEp9QwC0bsIc92+KdxIB0BTp931syzMRAOg7o++rgQ0CoD9jstvYn8NnIgDol6d/+Id8+ywcAUB/FPoH2vfX52H39vvDmWDQH6T/8TmCYdLTTr56/vfX5/6g3t4/Xn2WJBj6u+lXtfH7NHcJsuWzhEDQH4j+w+eLfzseAPrt6L99rMbezwEngAcogb6I4YxzMOBVTwaSEASA4W/CKNqxmDENPH4KAUC/Ef3ir9JE/AACgH4f2+91dObuIwiAoH9BnbcHQggAw29h/p8+vMUJaO9BQgDQP0v2/n6Ew/89pH9MA5wHgH4BXPafefepuz+e2d78+NmunrR/hL1AGP4Qea1GqHO4R4gQCPqn4DMT3oD5b2x4AGy/Zz9b2FUdIx6gBP3DNnJyt/3lB9mdv9H+xfZw9ygeYHH6LwSMbTA20+flL1V/7SEEwvDbxVdjH9w5tqIkHkIg6I9C//yXDqQZb+8fCAD6rePyUPpBAKXpn08A9t+FxdcPAsiBfnvK6xX5CNI/80YZD4Dh1+JSxIFIFbRCANAvHMxot6t3Otw/Nzm6rnotCAD6LaL/4e3Q2mPkPQDon7QplOrk9TmCARIeAPr7AhgzRe2/vZbqDAKA/tINAUB/6UYOAPpBm81IEQD0j3RSqie96az4+wFCIOhXB/fVH/c+ROPtGAKAfguf8IiviIQa52rn44RAoD81igiXRuIBoD8ETEpfxJlg6LdrEW4EsyyvggBK0z9QWFO728ayRwDh6FfadBDWBgv2uferv78+SYIJe4570hvntJRkkxr7ZOEWPEAJ+iePCBvYYy/lI4Dqtn/yVsaW8s6qId9kFk4IRORjmk4MlPEZC6gOl4Dq0KD/p7dmJ100xjvcf0KgQvSLf1f8zrcsBB6AsGfQiN59RLz+s9St2ngA6Fcf73795/0n7OwVvfzXWCLeeEifK5Jqod9bu0H1kjzHh18/ggfA8Ft02Lg4V7vOEUAt+tsv0NXudpC7bRAAtj9x5yfNPwKYQj/R5rZJJyCiAXGTL5JXIAAMv50G3J3S46f4Fago/cMXj0aI3YfrYD9+EA9Q1Pbr3RuZiP4Tb4IJe8YQ3AmTJl3EzrWWM37p1WcRQF36Z2C9K9SstNHo2r2xxL2lkQOQ8sr/9j9DpMapfC7IgP6ObjsOxJh+PIAM/dRqlnIC4mW2Dh9IDkDKGyLBUKowRw4A/cITMjDkw3OJjquDAKDfIUs2CKsae4gAoH98QswmYaAwUeNfkgOA/uykqU6IdoEtBAD9YrMnOzkGvyMhAOgPpwTjzXZn1gz6VWdVbxeDyBrVTYJBP6ZJtqS/rgCgfzEZDC9TRQFA/2IymFmmjSWEfhvUYrZCHgD0l/QGk4tVRQDQv6QM5herhACgf0kliCzW+gKA/kR6uDtpabBYKwsA9FddOMH12qAf+iuHUhv0w1yuhZNdsg36aYma+JKdQZ9WMPRf0ANAP/TXFQD0k/jWFQD0k/jWzQGoXUXiW1QAGH5C/7ohEPRDf10BQD/0Lx4C7VQjs6HfoOIN9EdosTbDqV4dPtkBxGC5ymazfV7PJIzN3WEH8AlmzXKSnT2Azd2xGt1ACalDf38PoBEFWs4dDmEB+n08QDT05/uDDJLSb+0BlHJ/d/7wBl5Lv04SPE//2J4IwYV5e/9AA8P0e02dXQg0fEo6S21KwqFcwc+lbWHp//769IVprAO55Fqc/oghUBALeu1G7+tnWiL6T6H2Ar2yuBEk4e6OSHyX9QABwXrVpcaEm2w4eOIbyAM0TkE0nnAIyxg+ZwEQWxP6kwPEMhiY9jr0n8zeA0jdt/z4HNndbzM9QULp6LdLgqXeZ0lNH2aegDZZCMRKLzAnAe1OiDfBK/GEb8k1M1sQ24BzIPRfUwBJPSMaqEC/ugDKxspv7x9Fxp59mOcl5+X22x3Nz/J7IhZw7yrvAbroF5wgqbcNsmNcWAOpgx8tAbiQUedLoT90DhAcxJNTAaL18oE16Bf2AF6Vyt2r+lQr0b4M/ZIeIBH94q1xUGv4gcW82VaTfq+KdNnpWe+tzpaX/mitlB9YZpU35gUNFAz9xQQQ1ideTi3ufLVemTp+9EzUzgPD7irGpjcvkY+kHJ5/yPWSeFX69wSwM2ZegkpRdTs/d7MaZ+rWTlqevwcwO701ueqHTkBwc8RAVxeoO738Zt4nAjCgX8qlznRV6ismRxpcBgsHPzJJsBITQdxuY1dXPSC/PP1PBKDqtbt2ybtrQGqL0TwlLlNRgf5T8EPxemtw+EFZ5tJpoM5Jps3S/GexQ0pdXSbyOS30+942T7Ye/Uot6auJOHO40q/bW5et3Rm5C1UtHRv7y7LcFAn9+zzA7ZifbjEIUsJfZOVUDe2+BXHfRlGN/tP1TbDjmZLeW+4au6Rxc6NIVx93SXSdLPP1tOslwWcz0I0frt1tvXdwLvcCli1gw/0AyZrGjBUsXvaXACJQmEIJ105q9zbgjTirGpSz+8jFYZK6Q6CIy6oZ+v8RwAIrejiErqQz/tXcgqlwcfoPPIDg4GeoetWN+RPx4qsbZMZIwNIkwWNISZWeffWcCud4Kie+PgIQmU2NqstSz4zsT0h8RwQgTlvvnN79varLnjybZozL5FQQ+l/br3/+/c94gcfqCNkErI/DdAwVlIpdQ/9fAvj5+YlW0XaMQhcNeG3Ghn4fAegteait1PudcdyNM7kKJL7PBXAKXOlEUJzuOjcbKfTLJMHu9rhLli3bocNW9I8gzppFnLYBOEIx0dvz9r9f6T0RoX+TB8g1CzOizVvBUyP4qVzAb4tJhs2aGdeGcBE89I/kAC5nf12i1RTLP2yV2O0jnwS7m3/jHQfuDOn95I/5P73aDar3pj3mjM9vvcxYHRH6VTzAYV38UOZfxJRODjlvErWsB9DzuaeJeg0Bz7lrDxn603iAXnoqnERzGTKJb/okOGBMnOUUPImvjwCkqskmSiWTFtCF/ikBLHnPewrlEPrH9QBAnKJL0O+TA6TbX5RxyNAfVACXeZ+f/UTrJzVkPPAiHqCUBbqrIx+Efsy/vwCKWKnbYQYZMvR7CuBSWGUehUT6uXQ1yDsv6BcWwPKGXKrgHPQX8gAFJ9p9yCS+yXIAxLM/ZKlLuTH/PgIYm+7HT2W5aFVwyJiV0h4gSwIQBylC/6ACMKgmm90JGNyVDf297fxqHocvTk26SGPqshwy9Gu036UR2yd6pqqUSEUq+3q0jkPuupkYAcwKYKxw+QJhru9B5MNvh371HEDj5pUsP2IEPIbfG5tB/5QAgpdNVs2GF3ijBP0CHiDdotpsMYrPFvTPCiCd+Rex32uEfNBv6gGMp7v995PefQRBcn1ahHZ8SZ4vB712WupW7eA3xKBPCwEYn2kSvxFe3PnoXTHfO1joVxeA44/fiW6JPGW7I5Xm7wES3RPsbo8P3xDT7JJg40h38up2M/r1xMmpl9UEMFlNVu/6pscnF6z1iwB0F1WqmKa4DCwL06KocAKoc1lii+GfhM8lUaHNtPPhitrsZR/ow+0/pn6fjfl3FsD8DVnRHMLtcHpxBz48gA+7guTp5cruIiH+UUmCu8oxXOu9hdpStgyFuKC4HuDp2hjfAJe9zbzfYJJ9BNBik6TSZXHI7M8Qd33wznxg/t0E4JUKax/vEtzBpneZNucenXOA7MFrSzbSmLH47oCieQpAz0bOPLnleGRwEKG/hAdImoYKNr0ohfjHSADRnICs+VelLc6BHtqUB4ijAT36zepBiNCP+bcOgQ5nfBjN9rV0X/WurspuqoN+s/akNujOKvbuPxuOCkSqiEqBNXY6EfoXEcAkf+2+QrZgesurpeF9ciKx2X4PQT+BAE6ub3Aayba/9oK3WulzAFkfXepnEOivJQBHDbTsYDXWHr94lguBfC2fTRIs2xnM/2oeAAMJ/QhAq5Yt9NNyhEC9Nt73Vav9t0N/iRBI6u2SYygP/QggmQbsNdMVyEF/oRDIMTI2+xlqsRpEeIC4hlb26+z7A/3x21kbAq/S/r61KkAfD+CMgqMBhn4EUBcI6EcAU1kj9NNWE0AdYtgMRxLswJZI/eeuA5CAjgACWVYRHEOVdqStEwLZH8gigKHlyAEagbPkkn2dCMA0zc24O7rsrQjkALp2V6+0DjESLUESLFjHXDYbhntCIMUoaCfGcCePaGf5prgduqARJTlGAEYa6C1IaJBgQD85wAEfBn6AHaC0cDnALSUioESjDfoJgewiIlnaJp0S6CMAawQjlJeDe3IA4fghyx4E0McD+DgEbfLGbsGgIYCl2qMMQB8B0GjLtv8Bbkx+SKJcPdwAAAAASUVORK5CYII="
-          alt="Polea"
-          class="w-full h-full object-contain block"
-          style="background:#FFFFFF;"
-        >
-      </div>
-      <div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Calculadora de Tensión de Correas</h1>
-        <p class="text-blue-200 text-xs sm:text-sm">Inspección y Verificación de Tensión de Correas</p>
-      </div>
-    </div>
-    
-    <div class="flex items-center gap-2 no-print">
-      <button onclick="cargarEjemplo()" class="px-3 py-2 text-xs font-semibold bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg transition text-white">
-        Cargar Ejemplo
-      </button>
-      <button onclick="window.print()" class="px-3 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition flex items-center justify-center gap-1.5 shadow-sm text-center">
-        Imprimir Ficha
-      </button>
-    </div>
-  </header>
-
-  <!-- ================= LAYOUT EN 2 COLUMNAS ================= -->
-  <div class="qv-layout grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-    <!-- COLUMNA IZQUIERDA: FORMULARIO (7 COLS) -->
-    <div class="qv-form lg:col-span-7 space-y-5">
-
-      <!-- SECCIÓN 1: POLEAS Y GEOMETRÍA -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h2 class="text-[16px] font-bold text-black flex items-center gap-2.5" style="font-family: Arial, sans-serif;">
-            <span class="w-7 h-7 rounded-lg bg-[#EBF1FF] text-black text-[16px] font-bold flex items-center justify-center flex-shrink-0">1</span>
-            Geometría de Poleas
-          </h2>
-          <span class="text-xs text-slate-400 font-medium">Dimensiones en milímetros</span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Polea Motriz (d)</label>
-            <div class="relative flex items-center">
-              <input id="d" type="number" step="any" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition pr-12">
-              <span class="absolute right-3 text-xs font-bold text-slate-400">mm</span>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Polea Conducida (D)</label>
-            <div class="relative flex items-center">
-              <input id="D" type="number" step="any" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition pr-12">
-              <span class="absolute right-3 text-xs font-bold text-slate-400">mm</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SECCIÓN 2: MOTOR Y POTENCIA -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h2 class="text-[16px] font-bold text-black flex items-center gap-2.5" style="font-family: Arial, sans-serif;">
-            <span class="w-7 h-7 rounded-lg bg-[#EBF1FF] text-black text-[16px] font-bold flex items-center justify-center flex-shrink-0">2</span>
-            Parámetros del Motor
-          </h2>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Potencia Motor (P)</label>
-            <div class="relative flex items-center">
-              <input id="P" type="number" step="any" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition pr-12">
-              <span class="absolute right-3 text-xs font-bold text-slate-400">kW</span>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Velocidad Motor (RPM)</label>
-            <div class="relative flex items-center">
-              <input id="rpm" type="number" step="any" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition pr-14">
-              <span class="absolute right-3 text-xs font-bold text-slate-400">RPM</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SECCIÓN 3: CORREAS Y FACTORES -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h2 class="text-[16px] font-bold text-black flex items-center gap-2.5" style="font-family: Arial, sans-serif;">
-            <span class="w-7 h-7 rounded-lg bg-[#EBF1FF] text-black text-[16px] font-bold flex items-center justify-center flex-shrink-0">3</span>
-            Perfil de Correa y Factores
-          </h2>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Perfil de Correa</label>
-            <select id="perfil" onchange="cambiarPerfil()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition">
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true"><defs>
+    <symbol id="i-brand" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="7.5"/><circle cx="10.5" cy="10.5" r="3"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.1A8.4 8.4 0 0 1 9.9 4a8.5 8.5 0 1 0 10.1 10.1Z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 8V3h12v5M6 17H3V9h18v8h-3M6 14h12v7H6zM17 11h1"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 1.6 7M3 4v6h6"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M5 3v6m0 4v8M12 3v11m0 4v3M19 3v3m0 4v11M2 9h6m1 9h6m1-12h6"/></symbol>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h3l3-8 5 16 3-8h6"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.1"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-example" viewBox="0 0 24 24"><path d="M8 3h8v5l5 10a2 2 0 0 1-1.8 3H4.8A2 2 0 0 1 3 18L8 8V3ZM6 14h12M7 3h10"/></symbol>
+  </defs></svg>
+  <a class="skip" href="#calculadora">Ir a la calculadora</a>
+  <div class="atmosphere" aria-hidden="true"></div>
+  <div class="topbar-wrap no-print"><header class="topbar">
+    <a class="brand" href="#inicio" aria-label="Q-Vigil, inicio"><svg class="icon" aria-hidden="true"><use href="#i-brand"/></svg><span>Q-Vigil</span></a>
+    <nav class="nav-links" aria-label="Navegación principal"><a class="selected" href="#calculadora">Calculadora</a><a href="#resultados">Resultados</a><button type="button" onclick="mostrarModalJ()">Guía de factores</button></nav>
+    <div class="top-actions"><button class="icon-button" id="themeToggle" type="button" aria-label="Activar modo oscuro" title="Cambiar apariencia"><svg class="icon moon-icon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="icon sun-icon" aria-hidden="true"><use href="#i-sun"/></svg></button><button class="print-button" type="button" onclick="imprimirFicha()" aria-label="Imprimir ficha" title="Imprimir o guardar como PDF"><svg class="icon" aria-hidden="true"><use href="#i-print"/></svg><span>Imprimir ficha</span></button></div>
+  </header></div>
+  <section class="hero" id="inicio" aria-labelledby="pageTitle">
+    <h1 id="pageTitle">Calculadora<span> Tensión de Correas</span></h1>
+    <p class="intro">La tensión y frecuencia de tu transmisión.</p>
+    <div class="hero-meta"><span><span class="dot"></span>Disponible sin conexión</span><span class="meta-divider"></span><span>Optibelt · Gates · SKF</span></div>
+  </section>
+  <main>
+    <div class="workspace-title" id="calculadora"><h2>Configura tu transmisión.</h2><div class="tools no-print"><button class="text-button muted" type="button" onclick="limpiarTodo()" aria-label="Limpiar todos los datos"><svg class="icon" aria-hidden="true"><use href="#i-reset"/></svg><span>Limpiar</span></button><button class="text-button" type="button" onclick="cargarEjemplo()"><svg class="icon" aria-hidden="true"><use href="#i-example"/></svg>Cargar ejemplo</button></div></div>
+    <div class="workspace">
+      <form class="form-card card" id="calculatorForm" novalidate onsubmit="event.preventDefault(); mostrarResultados();">
+        <div class="card-heading"><span class="heading-icon"><svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg></span><div><h3>Parámetros del equipo</h3><p>El punto de partida de tu cálculo.</p></div></div>
+        <fieldset class="form-section"><legend class="sr-only">Geometría de poleas</legend><div class="section-label" aria-hidden="true"><span class="step">1</span>Geometría de poleas</div>
+          <div class="fields"><div class="field"><div class="label-row"><label for="d">Polea motriz <span class="symbol">d</span></label></div><div class="field-shell"><input id="d" type="number" step="any" min="0" inputmode="decimal" placeholder="0" required aria-describedby="dUnit"><span id="dUnit" class="unit">mm</span></div></div><div class="field"><div class="label-row"><label for="D">Polea conducida <span class="symbol">D</span></label></div><div class="field-shell"><input id="D" type="number" step="any" min="0" inputmode="decimal" placeholder="0" required aria-describedby="DUnit"><span id="DUnit" class="unit">mm</span></div></div></div>
+        </fieldset>
+        <fieldset class="form-section"><legend class="sr-only">Parámetros del motor</legend><div class="section-label" aria-hidden="true"><span class="step">2</span>Parámetros del motor</div>
+          <div class="fields"><div class="field"><div class="label-row"><label for="P">Potencia <span class="symbol">P</span></label></div><div class="field-shell"><input id="P" type="number" step="any" min="0" inputmode="decimal" placeholder="0" required aria-describedby="pUnit"><span id="pUnit" class="unit">kW</span></div></div><div class="field"><div class="label-row"><label for="rpm">Velocidad del motor</label></div><div class="field-shell"><input id="rpm" type="number" step="any" min="0" inputmode="decimal" placeholder="0" required aria-describedby="rpmUnit"><span id="rpmUnit" class="unit">rpm</span></div></div></div>
+        </fieldset>
+        <fieldset class="form-section"><legend class="sr-only">Correas y factores</legend><div class="section-label" aria-hidden="true"><span class="step">3</span>Correas y factores</div>
+          <div class="fields belt-fields">
+            <div class="field profile-field"><div class="label-row"><label for="perfil">Perfil de correa</label></div><div class="field-shell"><select id="perfil" onchange="cambiarPerfil()" required aria-describedby="mDisplay">
               <option value="" selected disabled>Seleccione Correa</option>
               <optgroup label="Métricas Optibelt (mm)">
                 <option value="OPTIBELT_SPZ">SPZ (0.074 kg/m)</option>
@@ -822,249 +99,43 @@
               <optgroup label="SKF">
                 <option value="SKF_A49">A-49 (0.100 kg/m)</option>
               </optgroup>
-            </select>
+            </select><svg class="icon select-chevron" aria-hidden="true"><use href="#i-chevron"/></svg></div></div>
+            <div class="field"><div class="label-row"><label id="labelLongitud" for="L">Longitud (L)</label><span id="longitudUnitHelp" class="helper-inline">Métrica (mm)</span></div><div class="field-shell"><input id="L" type="number" step="any" min="0" inputmode="decimal" placeholder="0" required aria-describedby="longitudUnitBadge longitudUnitHelp"><span id="longitudUnitBadge" class="unit">mm</span></div></div>
+            <div class="field"><div class="label-row"><label for="Z">Cantidad de correas <span class="symbol">Z</span></label></div><div class="field-shell"><input id="Z" type="number" step="1" min="1" inputmode="numeric" placeholder="0" required aria-describedby="zUnit"><span id="zUnit" class="unit">unid.</span></div></div>
+            <div class="field service-field"><div class="label-row"><label for="J">Factor de servicio <span class="symbol">J</span></label><button class="help-button" type="button" onclick="mostrarModalJ()" aria-label="Abrir guía del factor de servicio"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>Ver guía</span></button></div><div class="field-shell"><input id="J" type="number" step="0.01" min="0.5" inputmode="decimal" placeholder="1.20" aria-describedby="jHelp"><span class="unit">factor</span></div></div>
           </div>
-
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label id="labelLongitud" class="text-xs font-bold text-slate-700">Longitud (L)</label>
-              <span id="longitudUnitHelp" class="text-xs text-slate-400 font-medium">Métrica (mm)</span>
-            </div>
-            <div class="relative flex items-center">
-              <input id="L" type="number" step="any" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition pr-12">
-              <span id="longitudUnitBadge" class="absolute right-3 text-xs font-bold text-slate-400">mm</span>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Cantidad de Correas (Z)</label>
-            <div class="relative flex items-center">
-              <input id="Z" type="number" min="1" step="1" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition pr-14">
-              <span class="absolute right-3 text-xs font-bold text-slate-400">unid.</span>
-            </div>
-          </div>
-
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label class="text-xs font-bold text-slate-700">Factor de Servicio (J)</label>
-              <button type="button" onclick="mostrarModalJ()" class="text-xs text-slate-400 hover:text-slate-500 font-medium underline">
-                ¿Qué factor usar?
-              </button>
-            </div>
-            <div class="relative flex items-center">
-              <input id="J" type="number" step="0.01" min="0.5" placeholder="0" value="" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 focus:border-blue-600 focus:bg-white rounded-xl text-slate-900 font-semibold text-sm outline-none transition">
-            </div>
-          </div>
-        </div>
-
-        <!-- DATOS FÍSICOS CONSTANTES -->
-        <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 grid grid-cols-2 gap-3 text-xs">
-          <div>
-            <span class="text-slate-500 block">Masa lineal (m):</span>
-            <span id="mDisplay" class="font-bold text-blue-900 text-sm">0.195 kg/m</span>
-          </div>
-          <div>
-            <span class="text-slate-500 block">Factor de contacto (K):</span>
-            <span id="kDisplay" class="font-bold text-blue-900 text-sm">0.960 (Dinámico)</span>
-          </div>
-        </div>
-      </div>
-
-      <button type="button" onclick="mostrarResultados()" class="w-full py-3 px-4 bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 hover:from-blue-800 hover:via-blue-700 hover:to-indigo-800 text-white font-extrabold rounded-xl shadow-md hover:shadow-lg hover:shadow-blue-950/25 active:scale-[0.99] transition">
-        Mostrar resultados
-      </button>
-
+          <div class="constants"><div class="constant"><span>Masa lineal · m</span><strong id="mDisplay">— kg/m</strong></div><div class="constant"><span>Factor de contacto · K</span><strong id="kDisplay">0.000</strong></div></div>
+        </fieldset>
+        <div id="errorBox" class="error-box hidden" role="alert"><span id="errorMsg">Completa los parámetros.</span></div>
+        <button class="calculate" type="submit">Calcular tensión<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        <p class="form-footnote" id="jHelp">Si dejas J vacío, se utiliza el factor 1.20.</p>
+      </form>
+      <section class="results-column" id="resultados" aria-label="Resultados de la transmisión">
+        <div id="resultsContainer"><article class="result-card card" id="resultCard">
+          <div class="result-header"><h3>Tu frecuencia de ajuste</h3><span class="status" id="calculationStatus" role="status">Sin calcular</span></div>
+          <p class="result-eyebrow">Frecuencia objetivo</p><div class="result-title-row"><h4>Correa nueva · Instalación +10%</h4><span class="tiny-pill">Recomendado</span></div>
+          <div class="main-value-row"><div class="frequency"><span id="fNew10Val" class="number">0.0</span><span class="hz">Hz</span></div><div class="tension"><span class="tension-label">Tensión por ramal</span><strong id="tNew10Val">0</strong><span class="unit">N</span></div></div>
+          <div class="range-block"><div class="range-head"><span>Rango de medición sugerido</span><strong id="rangoNew10">0.0 - 0.0 Hz</strong></div><div class="range-track" aria-hidden="true"></div><div class="range-labels" aria-hidden="true"><span>−5%</span><span>Objetivo</span><span>+5%</span></div></div>
+          <div class="alternate-values"><div class="alternate"><p class="alternate-label">Nueva · Nominal</p><div class="alternate-value"><strong id="fNewVal">0.0</strong><span>Hz</span></div><p class="alternate-tension">Tensión <strong id="tNewVal">0 N</strong></p></div><div class="alternate"><p class="alternate-label">Usada · Retensado</p><div class="alternate-value"><strong id="fUsedVal">0.0</strong><span>Hz</span></div><p class="alternate-tension">Tensión <strong id="tUsedVal">0 N</strong></p></div></div>
+        </article></div>
+        <article class="diagram-card card"><div class="diagram-title"><h3>Una mirada a tu transmisión</h3><span id="ratioDisplay" class="ratio-badge">i = 0</span></div><div class="diagram-viewport"><svg id="beltSvg" viewBox="0 0 360 160" role="img" aria-label="Esquema referencial de la transmisión entre dos poleas"></svg></div><p class="diagram-note">Esquema referencial · No a escala</p><div class="diagram-numbers"><div><span>Distancia entre centros · C</span><strong id="cValue">0 mm</strong></div><div><span>Tramo libre · l</span><strong id="tramoValue">0 mm</strong></div></div></article>
+        <div class="metric-strip card"><div class="metric"><span>Velocidad de correa</span><strong id="vVal">0.00 m/s</strong></div><div class="metric"><span>Potencia por correa</span><strong id="pPerBeltVal">0.00 kW</strong></div><div class="metric"><span>Fuerza efectiva</span><strong id="fuVal">0 N</strong></div></div>
+      </section>
     </div>
-
-    <!-- COLUMNA DERECHA: DASHBOARD DE RESULTADOS (5 COLS) -->
-    <div class="qv-results lg:col-span-5 space-y-5">
-
-      <!-- ESQUEMA 2D DE TRANSMISIÓN (SVG) -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Esquema 2D de Transmisión</span>
-          <span id="ratioDisplay" class="text-xs font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded">i = 0</span>
-        </div>
-        
-        <div class="w-full h-40 bg-gradient-to-b from-slate-900 to-slate-950 rounded-xl flex items-center justify-center p-2 relative overflow-hidden border border-slate-800">
-          <svg id="beltSvg" viewBox="0 0 360 140" class="w-full h-full">
-            <!-- Renderizado dinámico en JS -->
-          </svg>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2 mt-3 text-center text-xs">
-          <div class="bg-slate-50 p-2 rounded-lg border border-slate-200">
-            <span class="text-slate-400 block text-[10px]">DISTANCIA CENTROS (C)</span>
-            <span id="cValue" class="font-extrabold text-slate-800 text-sm">0 mm</span>
-          </div>
-          <div class="bg-slate-50 p-2 rounded-lg border border-slate-200">
-            <span class="text-slate-400 block text-[10px]">TRAMO LIBRE (l)</span>
-            <span id="tramoValue" class="font-extrabold text-slate-800 text-sm">0 mm</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- ALERTA DE ERROR -->
-      <div id="errorBox" class="hidden error-box font-bold">
-        <span id="errorMsg">Parámetros inválidos</span>
-      </div>
-
-      <!-- CONTENEDOR DE RESULTADOS PRINCIPALES -->
-      <div id="resultsContainer" class="space-y-4">
-
-        <!-- TARJETA DESTACADA: CORREA NUEVA (+10% RECOMENDADA) -->
-        <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-md relative overflow-hidden">
-          <div class="absolute -right-4 -bottom-4 text-white/10 text-8xl font-black select-none pointer-events-none">Hz</div>
-          <div class="flex items-center justify-between mb-2">
-            <span class="bg-emerald-400/30 border border-emerald-300/40 text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full text-emerald-100">
-              Correa Nueva (Instalación +10%)
-            </span>
-            <span class="text-xs text-emerald-200 font-medium">Recomendado</span>
-          </div>
-
-          <div class="grid grid-cols-2 gap-4 items-end mt-3">
-            <div>
-              <span class="text-emerald-200 text-xs block font-semibold">FRECUENCIA OBJETIVO</span>
-              <div class="flex items-baseline gap-1">
-                <span id="fNew10Val" class="text-3xl sm:text-4xl font-black tracking-tight">0.0</span>
-                <span class="text-lg font-bold text-emerald-200">Hz</span>
-              </div>
-            </div>
-            <div class="text-right border-l border-emerald-500/40 pl-3">
-              <span class="text-emerald-200 text-xs block font-semibold">TENSIÓN POR RAMAL</span>
-              <div class="flex items-baseline justify-end gap-1">
-                <span id="tNew10Val" class="text-2xl sm:text-3xl font-bold">0</span>
-                <span class="text-sm font-semibold text-emerald-200">N</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-4 pt-3 border-t border-emerald-500/40 flex items-center justify-between text-[11px] text-emerald-100">
-            <span>Rango de medición sugerido:</span>
-            <span id="rangoNew10" class="font-bold bg-emerald-950/40 px-2 py-0.5 rounded">0.0 - 0.0 Hz</span>
-          </div>
-        </div>
-
-        <!-- TARJETAS SECUNDARIAS (NUEVA NOMINAL & RE-TENSADO USADA) -->
-        <div class="grid grid-cols-2 gap-3">
-          
-             <div class="bg-white border border-slate-200 rounded-xl p-3.5 shadow-sm">
-            <div class="text-[11px] font-bold text-blue-900 uppercase">Correa Nueva (Nominal)</div>
-            <div class="mt-1.5 flex items-baseline gap-1">
-              <span id="fNewVal" class="text-2xl font-black text-blue-900">0.0</span>
-              <span class="text-xs font-bold text-blue-900">Hz</span>
-            </div>
-            <div class="text-xs text-blue-900 mt-0.5">
-              Tensión: <strong id="tNewVal" class="text-blue-900">0 N</strong>
-            </div>
-          </div>
-
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 shadow-sm">
-            <div class="text-[11px] font-bold text-blue-900 uppercase">Re-tensado (Usada)</div>
-            <div class="mt-1.5 flex items-baseline gap-1">
-              <span id="fUsedVal" class="text-2xl font-black text-blue-900">0.0</span>
-              <span class="text-xs font-bold text-blue-900">Hz</span>
-            </div>
-            <div class="text-xs text-blue-900 mt-0.5">
-              Tensión: <strong id="tUsedVal" class="text-blue-900">0 N</strong>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- MÉTRICAS CINEMÁTICAS Y DINÁMICAS ADICIONALES -->
-        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm grid grid-cols-3 gap-2 text-center text-xs">
-          <div>
-            <span class="text-slate-400 block text-[10px]">VELOCIDAD (v)</span>
-            <span id="vVal" class="font-bold text-slate-800 text-sm">0.00 m/s</span>
-          </div>
-          <div class="border-x border-slate-100">
-            <span class="text-slate-400 block text-[10px]">POTENCIA / CORREA</span>
-            <span id="pPerBeltVal" class="font-bold text-slate-800 text-sm">0.00 kW</span>
-          </div>
-          <div>
-            <span class="text-slate-400 block text-[10px]">FUERZA EFECTIVA</span>
-            <span id="fuVal" class="font-bold text-slate-800 text-sm">0 N</span>
-          </div>
-        </div>
-
-        <!-- AVISO IMPORTANTE -->
-        <div class="aviso-importante">
-          <div class="aviso-texto">
-            <strong>Importante:</strong> Los valores calculados son una referencia técnica. Verifica siempre las especificaciones del fabricante, el tipo de correa y las condiciones reales de operación antes de realizar el ajuste en terreno.
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="text-center text-xs text-slate-400 pt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
-    <span>© 2026 Q-Vigil • División de Ingeniería y Mantenimiento Predictivo</span>
-    <span>Fórmulas validadas bajo estándares ISO / DIN / RMA</span>
-  </footer>
-
-</div>
-
-<!-- ================= MODAL ASISTENTE FACTOR DE SERVICIO J ================= -->
-<div id="modalJ" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
-    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-      <h3 class="font-extrabold text-slate-900 text-base">Asistente de Factor de Servicio (J)</h3>
-      <button onclick="cerrarModalJ()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
-    </div>
-    
-    <p class="text-xs text-slate-600 leading-relaxed">
-      Selecciona la aplicación de tu equipo para asignar automáticamente el factor de sobrecarga recomendado según catálogos industriales:
-    </p>
-
-    <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
-      <button onclick="seleccionarJ(1.10)" class="w-full text-left p-2.5 rounded-xl hover:bg-blue-50 border border-slate-200 transition flex justify-between items-center text-xs">
-        <div>
-          <strong class="text-slate-800 block">Carga Ligera (J = 1.10)</strong>
-          <span class="text-slate-500 text-[11px]">Ventiladores axiales pequeños, bombas centrífugas ligeras</span>
-        </div>
-        <span class="font-extrabold text-blue-700 bg-blue-100 px-2 py-1 rounded">1.10</span>
-      </button>
-
-      <button onclick="seleccionarJ(1.20)" class="w-full text-left p-2.5 rounded-xl hover:bg-blue-50 border border-blue-200 bg-blue-50/50 transition flex justify-between items-center text-xs">
-        <div>
-          <strong class="text-slate-800 block">Carga Normal (J = 1.20 - Estándar)</strong>
-          <span class="text-slate-500 text-[11px]">Compresores rotativos, sopladores, transportadores de banda</span>
-        </div>
-        <span class="font-extrabold text-blue-700 bg-blue-100 px-2 py-1 rounded">1.20</span>
-      </button>
-
-      <button onclick="seleccionarJ(1.40)" class="w-full text-left p-2.5 rounded-xl hover:bg-blue-50 border border-slate-200 transition flex justify-between items-center text-xs">
-        <div>
-          <strong class="text-slate-800 block">Carga Pesada (J = 1.40)</strong>
-          <span class="text-slate-500 text-[11px]">Bombas de pistón, compresores alternativos, elevadores de cangilones</span>
-        </div>
-        <span class="font-extrabold text-blue-700 bg-blue-100 px-2 py-1 rounded">1.40</span>
-      </button>
-
-      <button onclick="seleccionarJ(1.60)" class="w-full text-left p-2.5 rounded-xl hover:bg-blue-50 border border-slate-200 transition flex justify-between items-center text-xs">
-        <div>
-          <strong class="text-slate-800 block">Carga con Impacto Severo (J = 1.60 - 1.80)</strong>
-          <span class="text-slate-500 text-[11px]">Chancadores de mandíbula, molinos de bolas, trituradoras</span>
-        </div>
-        <span class="font-extrabold text-blue-700 bg-blue-100 px-2 py-1 rounded">1.60</span>
-      </button>
-    </div>
-
-    <div class="text-right pt-2 border-t border-slate-100">
-      <button onclick="cerrarModalJ()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition">
-        Cerrar
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- ================= JAVASCRIPT / LÓGICA DE CÁLCULO ================= -->
-<script>
+    <aside class="technical-note"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><p><strong>Referencia técnica.</strong> Los valores calculados son una referencia técnica. Verifica siempre las especificaciones del fabricante, el tipo de correa y las condiciones reales de operación antes de realizar el ajuste en terreno.</p></aside>
+    <footer class="footer"><div><span class="footer-brand">© 2026 Q-Vigil</span><div class="footer-detail">División de Ingeniería y Mantenimiento Predictivo</div></div><span class="footer-note">Fórmulas validadas bajo estándares ISO / DIN / RMA</span></footer>
+  </main>
+  <nav class="mobile-dock no-print" aria-label="Accesos rápidos"><a class="active" id="dockForm" href="#calculadora"><svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg>Calculadora</a><a id="dockResults" href="#resultados"><svg class="icon" aria-hidden="true"><use href="#i-wave"/></svg>Resultados</a><button type="button" onclick="mostrarModalJ()"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg>Guía</button></nav>
+  <div id="modalJ" class="modal-backdrop hidden no-print" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDescription"><div class="modal-card card" tabindex="-1"><div class="modal-head"><h2 id="modalTitle">Factor de servicio.</h2><button class="icon-button" type="button" onclick="cerrarModalJ()" aria-label="Cerrar guía"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><p id="modalDescription">Selecciona la aplicación de tu equipo para asignar el factor de sobrecarga del asistente.</p><div class="factor-options">
+    <button type="button" class="factor-option" onclick="seleccionarJ(1.10)"><span><strong>Carga ligera</strong><small>Ventiladores axiales pequeños, bombas centrífugas ligeras.</small></span><span class="factor-value">1.10</span></button>
+    <button type="button" class="factor-option" onclick="seleccionarJ(1.20)"><span><strong>Carga normal · Estándar</strong><small>Compresores rotativos, sopladores, transportadores de banda.</small></span><span class="factor-value">1.20</span></button>
+    <button type="button" class="factor-option" onclick="seleccionarJ(1.40)"><span><strong>Carga pesada</strong><small>Bombas de pistón, compresores alternativos, elevadores de cangilones.</small></span><span class="factor-value">1.40</span></button>
+    <button type="button" class="factor-option" onclick="seleccionarJ(1.60)"><span><strong>Impacto severo · J = 1.60–1.80</strong><small>Chancadores de mandíbula, molinos de bolas, trituradoras. Al seleccionar, se asigna 1.60.</small></span><span class="factor-value">1.60</span></button>
+  </div><p class="modal-footnote">Factores de referencia del asistente original. Confirma su aplicación según el fabricante y las condiciones del equipo.</p></div></div>
+  <div class="toast no-print" id="toast" role="status" aria-live="polite"></div>
+  <div class="sr-only" id="resultAnnouncement" role="status" aria-live="polite"></div>
+  <!-- Motor de cálculo conservado del archivo original. -->
+  <script id="originalEngine">
 const datosCorrea = {
   OPTIBELT_SPZ: { masa: 0.074, sistema: "metrico" },
   OPTIBELT_SPA: { masa: 0.123, sistema: "metrico" },
@@ -1337,6 +408,233 @@ window.addEventListener("load", function () {
   }, 5000);
 });
 </script>
+  <script id="interfaceEnhancements">(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const originalCalculate = mostrarResultados;
+  const originalExample = cargarEjemplo;
+  const originalReset = resetearResultadosIniciales;
+  const originalSelectFactor = seleccionarJ;
+  const form = $('calculatorForm');
+  const modal = $('modalJ');
+  const fields = ['d', 'D', 'P', 'rpm', 'perfil', 'L', 'Z', 'J'];
+  const values = ['fNew10Val', 'tNew10Val', 'fNewVal', 'tNewVal', 'fUsedVal', 'tUsedVal', 'vVal', 'pPerBeltVal', 'fuVal'];
+  let calculated = false;
+  let focusBeforeModal = null;
+  let toastTimer;
+  let lastGeometry = null;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+  function toast(message) {
+    clearTimeout(toastTimer);
+    $('toast').textContent = message;
+    $('toast').classList.add('show');
+    toastTimer = setTimeout(() => $('toast').classList.remove('show'), 3200);
+  }
+
+  // Representación visual; no interviene en los resultados del motor de cálculo.
+  function drawTransmission(d, D, isPreview = false) {
+    const dark = document.documentElement.dataset.theme === 'dark';
+    const max = Math.max(d, D);
+    const r1 = Math.max(15, d / max * 43);
+    const r2 = Math.max(15, D / max * 43);
+    const x1 = 76, x2 = 282, y = 75;
+    const s = (r2 - r1) / (x2 - x1), c = Math.sqrt(1 - s * s);
+    const a = { x: x1 - r1 * s, y: y - r1 * c };
+    const b = { x: x2 - r2 * s, y: y - r2 * c };
+    const e = { x: x2 - r2 * s, y: y + r2 * c };
+    const f = { x: x1 - r1 * s, y: y + r1 * c };
+    const belt = `M ${a.x} ${a.y} L ${b.x} ${b.y} A ${r2} ${r2} 0 ${r2 >= r1 ? 1 : 0} 1 ${e.x} ${e.y} L ${f.x} ${f.y} A ${r1} ${r1} 0 ${r1 > r2 ? 1 : 0} 1 ${a.x} ${a.y}`;
+    const line = dark ? '#8490aa' : '#b0b7c7';
+    const text = dark ? '#b8c5df' : '#7a879e';
+    const metallic = dark ? ['#8492aa','#46556d','#28354b','#556780'] : ['#fbfdff','#d6dfe9','#9babbd','#e5ecf5'];
+    function pulley(x, r, label) {
+      return `<g><circle cx="${x}" cy="${y+2}" r="${r}" fill="${dark ? '#070e1d' : '#b3c2d7'}" opacity=".25" filter="url(#soft-shadow)"/><circle cx="${x}" cy="${y}" r="${r-2}" fill="url(#metal-face)" stroke="${dark ? '#afbdd2' : '#fbfdff'}" stroke-width="1"/><circle cx="${x}" cy="${y}" r="${Math.max(9,r-8)}" fill="none" stroke="${dark ? '#bccae2' : '#8a9bb0'}" stroke-width=".6" opacity=".65"/><circle cx="${x}" cy="${y}" r="${Math.max(6,r*.38)}" fill="url(#hub-face)" stroke="${dark ? '#b0c2db' : '#f8fbff'}" stroke-width="1.1"/><circle cx="${x}" cy="${y}" r="${Math.max(3,r*.12)}" fill="${dark ? '#242e40' : '#889cb3'}"/><text x="${x}" y="${y+r+18}" text-anchor="middle" fill="${text}" font-family="inherit" font-size="9">${label}</text></g>`;
+    }
+    $('beltSvg').innerHTML = `<defs><linearGradient id="metal-face" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${metallic[0]}"/><stop offset=".35" stop-color="${metallic[1]}"/><stop offset=".65" stop-color="${metallic[2]}"/><stop offset="1" stop-color="${metallic[3]}"/></linearGradient><radialGradient id="hub-face" cx="35%" cy="25%"><stop stop-color="${metallic[0]}"/><stop offset="1" stop-color="${metallic[2]}"/></radialGradient><linearGradient id="belt-light" x1="0" y1="0" x2="1" y2="0"><stop stop-color="${dark ? '#79bbff' : '#7ea9e7'}"/><stop offset=".5" stop-color="${dark ? '#b0afff' : '#a9a9e5'}"/><stop offset="1" stop-color="${dark ? '#74acfd' : '#75a1e5'}"/></linearGradient><filter id="soft-shadow" x="-50%" y="-50%" width="200%" height="220%"><feGaussianBlur stdDeviation="4"/></filter></defs><g opacity="${isPreview ? '.6' : '1'}"><line x1="${x1-23}" y1="${y}" x2="${x2+23}" y2="${y}" stroke="${line}" stroke-width=".7" stroke-dasharray="3 4"/>${pulley(x1,r1,'Motriz · d')}${pulley(x2,r2,'Conducida · D')}<path d="${belt}" fill="none" stroke="${dark ? '#1e314a' : '#bec8da'}" stroke-width="4.8"/><path d="${belt}" fill="none" stroke="url(#belt-light)" stroke-width="2.7"/><path d="${belt}" fill="none" stroke="${dark ? '#cee4ff' : '#f7fbff'}" stroke-width=".6" opacity=".7"/><text x="180" y="22" fill="${text}" text-anchor="middle" font-family="inherit" font-size="8.5">Tramo libre · l</text><line x1="${x1}" y1="146" x2="${x2}" y2="146" stroke="${line}" stroke-width=".7"/><path d="M${x1+4} 143l-4 3 4 3M${x2-4} 143l4 3-4 3" fill="none" stroke="${line}" stroke-width=".7"/></g>`;
+  }
+
+  dibujarEsquema = function(d, D, C) {
+    if (!C || C <= 0) return;
+    $('ratioDisplay').textContent = `Relación i = ${(D / d).toFixed(2)}`;
+    lastGeometry = { d, D };
+    drawTransmission(d, D);
+  };
+
+  function resetResults(status = 'Sin calcular') {
+    calculated = false;
+    lastGeometry = null;
+    document.body.classList.remove('has-results');
+    originalReset();
+    $('calculationStatus').textContent = status;
+    drawTransmission(160,315,true);
+    $('fNew10Val').style.fontSize = '';
+  }
+
+  function clearValidation() {
+    fields.forEach(id => $(id).removeAttribute('aria-invalid'));
+  }
+
+  function invalidate() {
+    if (calculated) {
+      resetResults('Por actualizar');
+      $('resultAnnouncement').textContent = 'Parámetros modificados. Vuelve a calcular para actualizar los resultados.';
+    }
+  }
+
+  function fitFrequency() {
+    const number = $('fNew10Val');
+    number.style.fontSize = '';
+    const row = number.closest('.main-value-row');
+    const space = row.clientWidth - row.querySelector('.tension').getBoundingClientRect().width - 15;
+    const frequency = number.parentElement;
+    let size = parseFloat(getComputedStyle(number).fontSize);
+    while (frequency.getBoundingClientRect().width > space && size > 32) {
+      size -= 2;
+      number.style.fontSize = `${size}px`;
+    }
+  }
+
+  mostrarResultados = function() {
+    clearValidation();
+    resetResults();
+    const invalid = fields.filter(id => {
+      const value = $(id).value;
+      if (id === 'perfil') return !datosCorrea[value];
+      if (id === 'J' && value === '') return false;
+      const number = Number(value);
+      return value === '' || !Number.isFinite(number) || number <= 0 || (id === 'Z' && !Number.isInteger(number)) || (id === 'J' && number < 0.5);
+    });
+    if (invalid.length) {
+      invalid.forEach(id => $(id).setAttribute('aria-invalid', 'true'));
+      $('errorBox').classList.remove('hidden');
+      $('errorMsg').textContent = 'Completa los campos indicados con valores mayores que cero. La cantidad de correas debe ser un número entero y J debe ser igual o mayor que 0.50.';
+      $('calculationStatus').textContent = 'Revisa los datos';
+      $(invalid[0]).focus();
+      return;
+    }
+    originalCalculate();
+    if (!$('errorBox').classList.contains('hidden')) {
+      $('calculationStatus').textContent = 'Revisa la geometría';
+      $('errorBox').scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block: 'center' });
+      return;
+    }
+    if (values.some(id => /NaN|Infinity/.test($(id).textContent))) {
+      resetResults('Revisa los datos');
+      $('errorMsg').textContent = 'No fue posible obtener resultados finitos. Revisa los valores ingresados.';
+      $('errorBox').classList.remove('hidden');
+      return;
+    }
+    calculated = true;
+    document.body.classList.add('has-results');
+    $('calculationStatus').textContent = 'Cálculo actualizado';
+    $('resultAnnouncement').textContent = `Cálculo actualizado. Frecuencia objetivo ${$('fNew10Val').textContent} hercios. Tensión por ramal ${$('tNew10Val').textContent} newtons.`;
+    $('resultCard').classList.remove('pulse');
+    void $('resultCard').offsetWidth;
+    $('resultCard').classList.add('pulse');
+    fitFrequency();
+    if (window.matchMedia('(max-width: 760px)').matches) $('resultados').scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block:'start' });
+  };
+
+  cargarEjemplo = function() {
+    originalExample();
+    resetResults('Ejemplo cargado');
+    clearValidation();
+    toast('Ejemplo cargado. Pulsa Calcular tensión.');
+  };
+
+  window.limpiarTodo = function() {
+    form.reset();
+    clearValidation();
+    resetResults();
+    cambiarPerfil();
+    $('mDisplay').textContent = '— kg/m';
+    $('resultAnnouncement').textContent = 'Datos y resultados limpiados.';
+    toast('Datos limpiados.');
+  };
+
+  window.imprimirFicha = function() {
+    if (!calculated) {
+      toast('Calcula los resultados antes de imprimir la ficha.');
+      return;
+    }
+    window.print();
+  };
+
+  form.addEventListener('input', event => {
+    event.target.removeAttribute('aria-invalid');
+    $('errorBox').classList.add('hidden');
+    invalidate();
+  });
+  form.addEventListener('change', event => {
+    event.target.removeAttribute('aria-invalid');
+    invalidate();
+  });
+
+  const inertElements = [...document.querySelectorAll('main,.hero,.topbar-wrap,.mobile-dock')];
+  mostrarModalJ = function() {
+    focusBeforeModal = document.activeElement;
+    modal.classList.remove('hidden');
+    inertElements.forEach(el => { el.inert = true; });
+    document.body.style.overflow = 'hidden';
+    modal.querySelector('.icon-button').focus();
+  };
+  cerrarModalJ = function() {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+    inertElements.forEach(el => { el.inert = false; });
+    if (focusBeforeModal?.isConnected) focusBeforeModal.focus({preventScroll:true});
+  };
+  seleccionarJ = function(value) {
+    originalSelectFactor(value);
+    $('J').removeAttribute('aria-invalid');
+    invalidate();
+    toast(`Factor de servicio actualizado a ${value.toFixed(2)}.`);
+  };
+  modal.addEventListener('click', event => { if (event.target === modal) cerrarModalJ(); });
+  modal.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { event.preventDefault(); cerrarModalJ(); }
+    if (event.key === 'Tab') {
+      const controls = [...modal.querySelectorAll('button')];
+      const first = controls[0], last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
+  });
+
+  function applyTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    $('themeToggle').setAttribute('aria-label', theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro');
+    document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#0e1016' : '#f5f5f7';
+    if (lastGeometry) drawTransmission(lastGeometry.d,lastGeometry.D);
+    else drawTransmission(160,315,true);
+  }
+  $('themeToggle').addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('qvigil-glass-theme', next); } catch {}
+  });
+  try {
+    const saved = localStorage.getItem('qvigil-glass-theme');
+    applyTheme(saved === 'dark' ? 'dark' : 'light');
+  } catch { applyTheme('light'); }
+
+  let scrollTick = false;
+  window.addEventListener('scroll', () => {
+    if (scrollTick) return;
+    scrollTick = true;
+    requestAnimationFrame(() => {
+      const inResults = $('resultados').getBoundingClientRect().top < window.innerHeight * .48;
+      $('dockForm').classList.toggle('active', !inResults);
+      $('dockResults').classList.toggle('active', inResults);
+      scrollTick = false;
+    });
+  }, {passive:true});
+  window.addEventListener('resize', fitFrequency, {passive:true});
+  window.addEventListener('beforeprint', () => { $('fNew10Val').style.fontSize = ''; });
+  window.addEventListener('afterprint', fitFrequency);
+  resetResults();
+})();
+</script>
 </body>
 </html>
